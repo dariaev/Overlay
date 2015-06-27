@@ -6,9 +6,17 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+
+import com.parse.FindCallback;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,6 +50,40 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         testImage.setImageBitmap(bmOverlay);
     }
 
+    public ArrayList<Overlay> getAllOverlays() {
+        final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
+        ParseQuery query = new ParseQuery("Overlay");
+        Log.d("Angie", "Retrieved  Brands");
+
+        query.findInBackground(new FindCallback() {
+            @Override
+            public void done(List list, com.parse.ParseException e) {
+                if (e == null) {
+
+                    String myObject = list.toString();
+                    Log.d("Angie", "Retrieved " + myObject + " Brands");
+
+
+                } else {
+                    Log.d("Angie", "Error: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void done(Object o, Throwable throwable) {
+                Log.d("Angie", "Retrieved " + o.toString());
+                List<ParseObject> list = (List<ParseObject>) o;
+                for (int i=0; i<list.size(); i++) {
+                    ParseObject object = (ParseObject) list.get(i);
+                    Log.v("Angie", "ID" + object.getObjectId());
+                    Overlay overlay = new Overlay(object);
+                    allOverlays.add(overlay);
+                }
+
+            }
+        });
+        return allOverlays;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
