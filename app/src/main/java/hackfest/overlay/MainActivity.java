@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().hide();
 
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
@@ -59,6 +61,13 @@ public class MainActivity extends ActionBarActivity {
         //ParseUploadImage();
     }
 
+    public void openDrawer(View view) {
+            mDrawerLayout.openDrawer(Gravity.LEFT);
+    }
+
+    public void CapturePhoto(View view){
+        //TODO: Rohan
+    }
     private byte[] readInFile(String path) throws IOException {
         // TODO Auto-generated method stub
         byte[] data = null;
