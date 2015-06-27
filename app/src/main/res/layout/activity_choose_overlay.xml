@@ -21,8 +21,17 @@
             android:scaleType="fitCenter"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/greylock_sample"
-            android:id="@+id/imageView" />
+            tools:src="@drawable/greylock_sample"
+            android:id="@+id/selected_photo" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/greylock_partners"
+            android:id="@+id/overlay" />
 
         </FrameLayout>
 

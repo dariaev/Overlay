@@ -10,7 +10,7 @@ public class OverlayApp extends Application {
         super.onCreate();
 
 // Enable Local Datastore.
-        //Parse.enableLocalDatastore(this);
+        //enableLocalDatastore(this);
 
         //Parse.initialize(this, "APPLICATION ID", "CLIENT KEY");
     }

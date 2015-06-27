@@ -1,17 +1,45 @@
 package hackfest.overlay;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class ChooseOverlayActivity extends ActionBarActivity {
+
+    @InjectView(R.id.overlay)
+    ImageView mOverlayPng;
+    @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_overlay);
+        ButterKnife.inject(this);
+
+        Bitmap selectedPhotoBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
+        Bitmap overlayBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
+
+        Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
+                selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(bmOverlay);
+        canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
+        canvas.drawBitmap(overlayBitmap, new Matrix(), null);
+        canvas.save();
+        // TODO figure out how to save it
+        // this image view doesn't do anything right now
+        ImageView testImage = new ImageView(this);
+        testImage.setImageBitmap(bmOverlay);
     }
 
 
