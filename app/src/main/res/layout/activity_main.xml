@@ -40,13 +40,6 @@ android:layout_height="match_parent">
                 android:gravity="bottom|center_horizontal"
                 android:onClick="CapturePhoto"/>
         </RelativeLayout>
-        <Button
-            android:layout_width="100dp"
-            android:layout_height="20dp"
-            android:onClick="launchOtherAct"
-            android:background="@color/material_blue_grey_800"
-            android:id="@+id/button">
-        </Button>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/NavLinearLayout"

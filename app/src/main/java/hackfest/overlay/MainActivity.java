@@ -103,6 +103,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void CapturePhoto(View view){
+        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+        startActivity(intent);
         //TODO: Rohan
     }
     private byte[] readInFile(String path) throws IOException {
