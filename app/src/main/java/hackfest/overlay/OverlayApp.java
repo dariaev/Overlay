@@ -2,6 +2,10 @@ package hackfest.overlay;
 
 import android.app.Application;
 
+import com.parse.Parse;
+
+import static com.parse.Parse.*;
+
 /**
  * Created by sunangel on 6/27/15.
  */
@@ -10,9 +14,9 @@ public class OverlayApp extends Application {
         super.onCreate();
 
 // Enable Local Datastore.
-        //Parse.enableLocalDatastore(this);
+        enableLocalDatastore(this);
 
-        //Parse.initialize(this, "APPLICATION ID", "CLIENT KEY");
+        Parse.initialize(this, "2KJXTDF4lYeromW26zCntFAwqSfHlpHvsDIngyAy", "wVyECX1l2tyJUVhXTBwW73EJ12X1lpNdrzQrCsGh");
     }
 
 }

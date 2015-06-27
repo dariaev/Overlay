@@ -1,10 +1,15 @@
 package hackfest.overlay;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +18,16 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -37,6 +52,68 @@ public class MainActivity extends ActionBarActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+        //ParseUploadImage();
+    }
+
+    private byte[] readInFile(String path) throws IOException {
+        // TODO Auto-generated method stub
+        byte[] data = null;
+        File file = new File(path);
+        InputStream input_stream = new BufferedInputStream(new FileInputStream(
+                file));
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        data = new byte[16384]; // 16K
+        int bytes_read;
+        while ((bytes_read = input_stream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, bytes_read);
+        }
+        input_stream.close();
+        return buffer.toByteArray();
+
+    }
+
+    public void launchOtherAct(View view) {
+        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+        startActivity(intent);
+    }
+    private void ParseUploadImage() {
+        String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/dinner.jpg";
+        //Bitmap bitmap = BitmapFactory.decodeFile(path);
+        // Convert it to byte
+        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Compress image to lower quality scale 1 - 100
+        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        Log.v("Angie", path);
+        byte[] image = null;
+        try {
+            image = readInFile(path);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        // Create the ParseFile
+        ParseFile file = new ParseFile("picturePath", image);
+        // Upload the image into Parse Cloud
+        file.saveInBackground();
+
+        // Create a New Class called "ImageUpload" in Parse
+        ParseObject imgupload = new ParseObject("Image");
+
+        // Create a column named "ImageName" and set the string
+        imgupload.put("Image", "picturePath");
+
+
+        // Create a column named "ImageFile" and insert the image
+        imgupload.put("ImageFile", file);
+
+        // Create the class and the columns
+        imgupload.saveInBackground();
+
     }
 
     private void addDrawerItems() {
