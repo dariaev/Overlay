@@ -14,11 +14,7 @@ public class OverlayApp extends Application {
         super.onCreate();
 
 // Enable Local Datastore.
-<<<<<<< HEAD
-        //enableLocalDatastore(this);
-=======
         enableLocalDatastore(this);
->>>>>>> 71fa7ef207f296f863a0184205f7aec29904d2b5
 
         Parse.initialize(this, "2KJXTDF4lYeromW26zCntFAwqSfHlpHvsDIngyAy", "wVyECX1l2tyJUVhXTBwW73EJ12X1lpNdrzQrCsGh");
     }
