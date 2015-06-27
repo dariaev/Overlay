@@ -57,8 +57,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     private View getImageView(Integer image) {
         ImageView imageView = new ImageView(getApplicationContext());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, 0, 10, 0);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
+        lp.setMargins(0, 0, 50, 0);
         imageView.setLayoutParams(lp);
         imageView.setImageResource(image);
         return imageView;
