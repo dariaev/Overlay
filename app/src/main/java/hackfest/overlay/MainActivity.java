@@ -66,6 +66,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void CapturePhoto(View view){
+        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+        startActivity(intent);
         //TODO: Rohan
     }
     private byte[] readInFile(String path) throws IOException {
@@ -85,10 +87,6 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public void launchOtherAct(View view) {
-        Intent intent = new Intent(this, ChooseOverlayActivity.class);
-        startActivity(intent);
-    }
     private void ParseUploadImage() {
         String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/dinner.jpg";
         //Bitmap bitmap = BitmapFactory.decodeFile(path);

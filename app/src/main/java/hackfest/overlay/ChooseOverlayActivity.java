@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,6 +22,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_overlay);
         ButterKnife.inject(this);
+        populateGallery();
         /*
         Bitmap selectedPhotoBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
         Bitmap overlayBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
@@ -35,6 +38,22 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         // this image view doesn't do anything right now
         ImageView testImage = new ImageView(this);
         testImage.setImageBitmap(bmOverlay); */
+    }
+
+    private void populateGallery() {
+        LinearLayout imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+        for (int i = 0; i < 10; i++) {
+            imageGallery.addView(getImageView(R.drawable.angie_head_circle));
+        }
+    }
+
+    private View getImageView(Integer image) {
+        ImageView imageView = new ImageView(getApplicationContext());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, 10, 0);
+        imageView.setLayoutParams(lp);
+        imageView.setImageResource(image);
+        return imageView;
     }
 
 
