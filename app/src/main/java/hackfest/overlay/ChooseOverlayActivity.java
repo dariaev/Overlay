@@ -1,10 +1,7 @@
 package hackfest.overlay;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,8 +13,7 @@ import butterknife.InjectView;
 
 public class ChooseOverlayActivity extends ActionBarActivity {
 
-    @InjectView(R.id.overlay)
-    ImageView mOverlayPng;
+    @InjectView(R.id.overlay) ImageView mOverlayPng;
     @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
 
     @Override
@@ -25,7 +21,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_overlay);
         ButterKnife.inject(this);
-
+        SystemClock.sleep(1000);
+        /*
         Bitmap selectedPhotoBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
         Bitmap overlayBitmap = ((BitmapDrawable) mSelectedPhoto.getDrawable()).getBitmap();
 
@@ -39,7 +36,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         // TODO figure out how to save it
         // this image view doesn't do anything right now
         ImageView testImage = new ImageView(this);
-        testImage.setImageBitmap(bmOverlay);
+        testImage.setImageBitmap(bmOverlay); */
     }
 
 
