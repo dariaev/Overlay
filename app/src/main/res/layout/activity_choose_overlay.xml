@@ -9,6 +9,36 @@
     android:id="@+id/root_choose_overlay">
 
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Trending"
+            android:id="@+id/trending"
+            android:gravity="center_horizontal" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:id="@+id/location"
+            android:gravity="center" />
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:id="@+id/Search"
+            android:gravity="center" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -22,9 +52,47 @@
             android:padding="5dp"
             android:adjustViewBounds="true"
             android:src="@drawable/greylock_sample"
-            android:id="@+id/imageView" />
+            android:id="@+id/imageView"
+            android:layout_gravity="center" />
 
         </FrameLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".1"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/back"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Upload"
+            android:id="@+id/upload"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:id="@+id/share"
+            android:gravity="center"
+            android:layout_gravity="center_vertical|right" />
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
