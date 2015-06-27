@@ -46,15 +46,23 @@
         android:background="@color/background_material_dark">
 
         <ImageView
+            android:id="@+id/selected_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/greylock_sample"
-            android:id="@+id/imageView"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            tools:src="@drawable/greylock_sample"/>
 
+        <ImageView
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/greylock_partners"/>
         </FrameLayout>
 
     <LinearLayout
@@ -65,13 +73,13 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/back"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center" />
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center" />
 
 
         <TextView
@@ -94,11 +102,39 @@
             android:layout_gravity="center_vertical|right" />
     </LinearLayout>
 
-    <ListView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight=".2"
-        android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_weight=".1"
+        android:layout_gravity="center_horizontal">
+
+        <Gallery
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gallery"
+            android:layout_gravity="center_horizontal"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/greylock_sample"
+            android:id="@+id/gal_img_1"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/greylock_sample"
+            android:id="@+id/gal_img_2"
+            android:layout_gravity="center" />
+
+        </LinearLayout>
 
 </LinearLayout>
