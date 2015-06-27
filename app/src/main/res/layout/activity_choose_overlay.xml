@@ -46,29 +46,23 @@
         android:background="@color/background_material_dark">
 
         <ImageView
+            android:id="@+id/selected_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:padding="5dp"
             android:adjustViewBounds="true"
-<<<<<<< HEAD
-            tools:src="@drawable/greylock_sample"
-            android:id="@+id/selected_photo" />
+            android:layout_gravity="center"
+            tools:src="@drawable/greylock_sample"/>
 
         <ImageView
+            android:id="@+id/overlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:padding="5dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/greylock_partners"
-            android:id="@+id/overlay" />
-=======
-            android:src="@drawable/greylock_sample"
-            android:id="@+id/imageView"
-            android:layout_gravity="center" />
->>>>>>> 71fa7ef207f296f863a0184205f7aec29904d2b5
-
+            android:src="@drawable/greylock_partners"/>
         </FrameLayout>
 
     <LinearLayout
@@ -79,13 +73,13 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/back"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center" />
+            android:id="@+id/back"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center" />
 
 
         <TextView
