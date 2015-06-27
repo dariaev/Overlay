@@ -65,13 +65,25 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:id="@+id/back"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center" />
+
+
+        <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:id="@+id/back"
+            android:text="Upload"
+            android:id="@+id/upload"
             android:gravity="center_horizontal"
             android:layout_gravity="center" />
+
+
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1"
