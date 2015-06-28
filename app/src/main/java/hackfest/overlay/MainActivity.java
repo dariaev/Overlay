@@ -56,7 +56,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     public static String photoExtra = "PHOTO_EXTRA";
     private static final String TAG = MainActivity.class.getSimpleName();
 
-
     Camera mCamera;
     private PictureCallback mPicture;
     SurfaceView surfaceView;
@@ -196,11 +195,11 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         // Create a New Class called "ImageUpload" in Parse
         ParseObject imgupload = new ParseObject("Overlay");
 
-        ParseGeoPoint currentLocation = new ParseGeoPoint(lastLat, lastLong);
+        ParseGeoPoint currentLocation = new ParseGeoPoint(((OverlayApp)getApplication()).lastLat,((OverlayApp)getApplication()).lastLong);
         // Create a column named "ImageName" and set the string
         imgupload.put("Overlay", path);
-        imgupload.put("Latitude", lastLat);
-        imgupload.put("Longitude", lastLong);
+        imgupload.put("Latitude", ((OverlayApp)getApplication()).lastLat);
+        imgupload.put("Longitude", ((OverlayApp)getApplication()).lastLong);
         imgupload.put("CurrentGeoPoint", currentLocation);
         imgupload.put("UseCount", 0);
         imgupload.put("TryCount", 0);
