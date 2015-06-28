@@ -3,6 +3,9 @@ package hackfest.overlay;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -33,16 +36,17 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     @InjectView(R.id.overlay) ImageView mOverlayPng;
     @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
-
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
+    LinearLayout imageGallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_overlay);
         ButterKnife.inject(this);
-        populateGallery();
         saveOverlayedImage();
+        imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+        getAllOverlays();
     }
 
     private void saveOverlayedImage() {
@@ -81,13 +85,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
         imageView.buildDrawingCache();
         return imageView.getDrawingCache();
-    }
-
-    private void populateGallery() {
-        LinearLayout imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
-        for (int i = 0; i < 10; i++) {
-            imageGallery.addView(getImageView(R.drawable.angie_head_circle));
-        }
     }
 
     private View getImageView(Integer image) {
@@ -139,9 +136,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     //possible that this will return an empty list
     public ArrayList<Overlay> getAllOverlays() {
-        final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
         ParseQuery query = new ParseQuery("Overlay");
         Log.d("Angie", "Retrieved  Brands");
+        final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
 
         query.findInBackground(new FindCallback() {
             @Override
@@ -167,7 +164,17 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     Overlay overlay = new Overlay(object);
                     allOverlays.add(overlay);
                 }
-
+                for (Overlay img : allOverlays) {
+                    Log.d("Noah","img read");
+                    ImageView iv = new ImageView(getApplicationContext());
+                    Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                    Drawable d = new BitmapDrawable(getResources(), bmp);
+                    iv.setImageDrawable(d);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
+                    lp.setMargins(0, 0, 50, 0);
+                    iv.setLayoutParams(lp);
+                    imageGallery.addView(iv);
+                }
             }
         });
         return allOverlays;
