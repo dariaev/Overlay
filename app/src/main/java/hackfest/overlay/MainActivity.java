@@ -70,10 +70,12 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private LocationListener locationListener;
     private double lastLong=-1;
     private double lastLat=-1;
+    private String photoExtra = "PHOTO_EXTRA";
 
     Camera camera;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
+    private byte[] img;
 
     Camera.PictureCallback rawCallback;
     Camera.ShutterCallback shutterCallback;
@@ -116,26 +118,15 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 FileOutputStream outStream = null;
-                try {
-                    outStream = new FileOutputStream(String.format("/sdcard/%d.jpg", System.currentTimeMillis()));
 
-                    outStream.write(data);
-                    outStream.close();
-                }
-
-                catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                finally {
-                }
+//                    outStream = new FileOutputStream(String.format("/sdcard/%d.jpg", System.currentTimeMillis()));
+//
+//                    outStream.write(data);
+//                    outStream.close();
+                img = data;
 
                 Toast.makeText(getApplicationContext(), "Picture Saved", Toast.LENGTH_LONG).show();
-                refreshCamera();
+                //refreshCamera();
             }
         };
     }
@@ -322,6 +313,9 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
     public void captureImage(View v) throws IOException {
         camera.takePicture(null, null, jpegCallback);
+        Intent intent = new Intent(MainActivity.this, ChooseOverlayActivity.class);
+        intent.putExtra(photoExtra,img);
+        startActivity(intent);
     }
 
     public void refreshCamera() {
