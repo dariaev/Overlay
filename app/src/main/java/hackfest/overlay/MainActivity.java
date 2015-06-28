@@ -366,6 +366,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             camera = Camera.open();
+            camera.setDisplayOrientation(90);
         }
 
         catch (RuntimeException e) {
