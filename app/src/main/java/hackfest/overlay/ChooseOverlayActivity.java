@@ -463,7 +463,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         Intent share = new Intent(Intent.ACTION_SEND);
 
                         // Set the MIME type
-                        share.setType("text/plain");
+                        share.setType("image/*");
                         share.setPackage("com.instagram.android");
 
                         // Add the URI and the caption to the Intent.
@@ -471,7 +471,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         share.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
 
                         // Broadcast the Intent.
-                        startActivity(Intent.createChooser(share, "Share to"));
+                        startActivity(share);
                         break;
                 }
             }
