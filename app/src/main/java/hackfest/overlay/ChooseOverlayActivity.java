@@ -85,7 +85,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
     @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
     @InjectView(R.id.horizontalScrollView) HorizontalScrollView scrollView;
-    @InjectView(R.id.upload) ImageView uploadView;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
     private Bitmap overlayBitmap;
     final ArrayList<Overlay> topNlocation = new ArrayList<Overlay>();
@@ -134,7 +133,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         mid = "Location";
         right = "Trending";
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-
     }
 
 
@@ -153,11 +151,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         if (((TextView) v).getText().equals("Search")){
             ShowSearchSlider(null);
         }
-    }
-
-    public void moveOverlay(View v) {
-        // follow the cursor
-        mDetector.setIsLongpressEnabled(true);
     }
 
     public void topNavClicked(View v) {
@@ -278,7 +271,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     protected Integer doInBackground(String... queryString) {
         URL url = null;
         URLConnection connection=null;
-        String tempQueryString="barack%20obama";
         Log.v("Angie", "query string is " + mQuery);
         try {
             url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
@@ -310,18 +302,12 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             b.putInt("Total", resultsArray.length());
             msgObj.setData(b);
             mHandler.sendMessage(msgObj);
-            //Log.v("AngieJSON4", responseData.get("GsearchResultClass").toString());
         }
         catch(Exception e) {
             Log.v("AngieJSON", "Exception");
             Log.v("AngieJSon", e.toString() + e.getStackTrace().toString());
             e.printStackTrace();
         }
-
-         //   url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
-        //            "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&start=4");
-
-
         return 3;
     }
 
@@ -474,8 +460,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
                     }
                 }
-
-
 
                 removeMessages(0);
                 //message.
