@@ -344,11 +344,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
             @Override
             public void done(Object o, Throwable throwable) {
-                List<ParseObject> list = (List<ParseObject>) o;
-                for (int i = 0; i < n && i < list.size(); i++) {
-                    ParseObject object = (ParseObject) list.get(i);
-                    Overlay overlay = new Overlay(object);
-                    trending.add(overlay);
+                if (trending == null || trending.size() == 0) {
+                    List<ParseObject> list = (List<ParseObject>) o;
+                    for (int i = 0; i < n && i < list.size(); i++) {
+                        ParseObject object = (ParseObject) list.get(i);
+                        Overlay overlay = new Overlay(object);
+                        trending.add(overlay);
+                    }
                 }
                 imageGallery.removeAllViews();
                 for (Overlay img : trending) {
@@ -406,11 +408,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
             @Override
             public void done(Object o, Throwable throwable) {
-                List<ParseObject> list = (List<ParseObject>) o;
-                for (int i = 0; i < n && i < list.size(); i++) {
-                    ParseObject object = (ParseObject) list.get(i);
-                    Overlay overlay = new Overlay(object);
-                    topNlocation.add(overlay);
+                if (trending == null || trending.size() == 0) {
+                    List<ParseObject> list = (List<ParseObject>) o;
+                    for (int i = 0; i < n && i < list.size(); i++) {
+                        ParseObject object = (ParseObject) list.get(i);
+                        Overlay overlay = new Overlay(object);
+                        topNlocation.add(overlay);
+                    }
                 }
                 imageGallery.removeAllViews();
                 for (Overlay img : topNlocation) {
