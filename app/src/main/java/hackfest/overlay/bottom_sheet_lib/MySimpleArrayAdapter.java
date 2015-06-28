@@ -29,13 +29,37 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.personalInfo).findViewById(R.id.icon);
+        TextView name = (TextView) rowView.findViewById(R.id.personalInfo).findViewById(R.id.name);
+        TextView pts = (TextView) rowView.findViewById(R.id.personalInfo).findViewById(R.id.points);
+        ImageView bigpic= (ImageView) rowView.findViewById(R.id.bigphoto);
         // change the icon for Windows and iPhone
         String s = values[position];
-        if (s.startsWith("iPhone")) {
+        if (position==0) {
             imageView.setImageResource(R.drawable.angie_head_circle);
-        } else {
-            imageView.setImageResource(R.drawable.com_facebook_button_check);
-        }
+            bigpic.setImageResource(R.drawable.angie_head_circle);
+            name.setText("Angie Sun");
+            pts.setText("51 points");
+        } else if (position==1) {
+            imageView.setImageResource(R.drawable.angie_head_circle);
+            bigpic.setImageResource(R.drawable.angie_head_circle);
+            name.setText("Daria Evdokimova");
+            pts.setText("62 points");
+        }else if (position==2){
+            imageView.setImageResource(R.drawable.angie_head_circle);
+            bigpic.setImageResource(R.drawable.angie_head_circle);
+            name.setText("Rohan Das");
+            pts.setText("900 points");
+        }else if (position==3){
+            imageView.setImageResource(R.drawable.angie_head_circle);
+            bigpic.setImageResource(R.drawable.angie_head_circle);
+            name.setText("Noah Presler");
+            pts.setText("100 points");
+        }else if (position==4){
+        imageView.setImageResource(R.drawable.angie_head_circle);
+        bigpic.setImageResource(R.drawable.angie_head_circle);
+        name.setText("Angie Sun");
+        pts.setText("50 points");
+    }
 
         return rowView;
     }

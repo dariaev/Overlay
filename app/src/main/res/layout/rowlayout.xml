@@ -7,12 +7,16 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
         android:id="@+id/personalInfo"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"/>
+            android:text="Name"
+            android:textSize="20dp"
+            android:id="@+id/name"
+            />
         <ImageView
             android:id="@+id/icon"
             android:layout_width="50dp"
@@ -25,14 +29,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"/>
+            android:id="@+id/points"
+            android:textSize="20dp"
+            android:text="Points"/>
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/label"
+        android:id="@+id/bigphoto"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:text="@+id/label"
+        android:text="@+id/bigphoto"
         android:src="@drawable/angie_head_circle" >
     </ImageView>
 
