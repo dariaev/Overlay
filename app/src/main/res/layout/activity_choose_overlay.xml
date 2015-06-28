@@ -65,8 +65,7 @@
                     android:layout_height="wrap_content"
                     android:scaleType="fitCenter"
                     android:padding="5dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/greylock_partners"/>
+                    android:adjustViewBounds="true"/>
             </FrameLayout>
 
             <LinearLayout

@@ -6,8 +6,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,6 +59,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private SlidingUpPanelLayout SlidePanel = null;
     private GestureDetectorCompat mDetector;
     private boolean lastWasPrev;
+    private ImageView previouslySelected;
     final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
     ListIterator<Overlay> itr;
     LinearLayout imageGallery;
@@ -70,6 +73,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
         getAllOverlays();
         lastWasPrev = false;
+        previouslySelected = null;
         getSupportActionBar().hide();
         getTopNTrending(20);
     }
@@ -376,6 +380,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     iv.setImageDrawable(d);
                     iv.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
+                            if(previouslySelected != null){
+                                previouslySelected.setBackgroundResource(Color.TRANSPARENT);
+                                previouslySelected = (ImageView) v;
+                            }
+                            ImageView i = (ImageView) v;
+                            previouslySelected = i;
+                            v.setBackgroundResource(R.color.background_material_dark);
                             mOverlayPng.setImageDrawable(d);
                         }
                     });
