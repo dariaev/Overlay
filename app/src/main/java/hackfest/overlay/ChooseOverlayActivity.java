@@ -77,7 +77,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
     ListIterator<Overlay> itr;
     LinearLayout imageGallery;
-    private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
     private String left;
     private String mid;
     private String right;
@@ -215,52 +214,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
-    public void UploadImage(View view) {
-        Intent photoPickerIntent = new Intent();
-        photoPickerIntent.setType("image/*"); // to pick only images
-        photoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(photoPickerIntent, SELECT_PICTURE_ACTIVITY_RESULT_CODE);
-    }
-
-    public byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        Log.v("Yeezy", "Kimmy");
-
-
-        return byteBuffer.toByteArray();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("Rorororo", "Rorohan");
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case SELECT_PICTURE_ACTIVITY_RESULT_CODE:
-                    Uri selectedImageUri = data.getData();
-                    try {
-                        InputStream iStream =   getContentResolver().openInputStream(selectedImageUri);
-                        byte[] inputData = getBytes(iStream);
-                        Intent intent = new Intent(this, ChooseOverlayActivity.class);
-                        intent.putExtra("Upload_overlay_bytes", inputData);
-                        startActivity(intent);
-
-                        Log.v("Yeezy", "NorthWest");
-                    }
-                    catch (Exception e) {
-                    }
-
-                default:
-                    // deal with it
-                    break;
-            }
-        }
-    }
 
 
     public void ShareViaEmail(View view) {

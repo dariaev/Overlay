@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
@@ -55,6 +56,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private LocationListener locationListener;
     public static String photoExtra = "PHOTO_EXTRA";
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
 
     Camera mCamera;
     private PictureCallback mPicture;
@@ -292,6 +294,54 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
         return super.onOptionsItemSelected(item);
     }
+    public void UploadImage(View view) {
+        Intent photoPickerIntent = new Intent();
+        photoPickerIntent.setType("image/*"); // to pick only images
+        photoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(photoPickerIntent, SELECT_PICTURE_ACTIVITY_RESULT_CODE);
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        Log.v("Yeezy", "Kimmy");
+
+
+        return byteBuffer.toByteArray();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v("Rorororo", "Rorohan");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SELECT_PICTURE_ACTIVITY_RESULT_CODE:
+                    Uri selectedImageUri = data.getData();
+                    try {
+                        InputStream iStream =   getContentResolver().openInputStream(selectedImageUri);
+                        byte[] inputData = getBytes(iStream);
+                        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+                        intent.putExtra("Upload_overlay_bytes", inputData);
+                        startActivity(intent);
+
+                        Log.v("Yeezy", "NorthWest");
+                    }
+                    catch (Exception e) {
+                    }
+
+                default:
+                    // deal with it
+                    break;
+            }
+        }
+    }
+
+
 
     public void captureImage(View v) throws IOException {
         mCamera.takePicture(null, null, mPicture);

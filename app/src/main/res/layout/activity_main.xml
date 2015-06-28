@@ -55,7 +55,17 @@ android:layout_height="match_parent">
                 android:background="@color/accent_material_dark"
                 android:layout_centerInParent="true"
                 android:gravity="bottom|center_horizontal"
+                android:id="@+id/captureButton"
                 android:onClick="captureImage"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="70dp"
+                android:src="@drawable/captureicon"
+                android:layout_below="@id/captureButton"
+                android:background="@color/accent_material_light"
+                android:layout_centerInParent="true"
+                android:gravity="bottom|center_horizontal"
+                android:onClick="UploadImage"/>
         </RelativeLayout>
     </LinearLayout>
     <LinearLayout
