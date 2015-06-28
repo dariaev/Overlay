@@ -133,6 +133,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         right = "Trending";
     }
 
+    public void midClick(View v){
+        TextView tv = (TextView) v;
+        if (((TextView) v).getText().equals("Search")){
+            ShowSearchSlider(null);
+        }
+    }
+
     public void topNavClicked(View v) {
         if (v.equals(imgButtonLeft)){
             textButtonMiddle.setText(left);
@@ -293,7 +300,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         //            "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&start=4");
 
 
-        return (Integer)3;
+        return 3;
     }
 
     protected void onPostExecute(Integer integer) {
@@ -344,12 +351,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 }).build();
                 share.show();
                 // Associate searchable configuration with the SearchView
-//                SearchManager searchManager =
-//                        (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-//                SearchView searchView =
-//                        (SearchView) share.getMenu().getItem(0) ;
-//                searchView.setSearchableInfo(
-//                        searchManager.getSearchableInfo(getComponentName()));
 
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
                     Log.v("Angie", "messagehandler" + message.getData().get("URL" + i));
@@ -369,9 +370,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 //message.
             }
         };
-
     }
-
 
 
     public void ShareViaEmail(View view) {
@@ -418,7 +417,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                             }
                         }
                         tweetIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-
                         startActivity(tweetIntent);
 
                         break;
@@ -438,16 +436,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         share.hideSearchBar(true);
 
         share.show();
-/*
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-
-        sharingIntent.setType("image/png");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out my photo on Swiper!");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,"Hey!\nCheck out my photo on Swiper!");
-
-        File image = new File(Environment.getExternalStorageDirectory()+"/DCIM/Camera/ed.png");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
-        startActivity(sharingIntent); */
     }
     private void saveOverlayedImage(Bitmap bmOverlay) {
         // processes two images, merges them and saves the result
@@ -469,13 +457,15 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private Bitmap getOverlayedBitmap(ImageView selectedPhoto, ImageView overlay) {
         Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
         Bitmap overlayBitmap = ((BitmapDrawable)overlay.getDrawable()).getBitmap();
+        Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
+                selectedPhoto.getHeight(), true);
 
         Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
                 selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
         Canvas canvas = new Canvas();
         canvas.setBitmap(bmOverlay);
         canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
-        canvas.drawBitmap(overlayBitmap, new Matrix(), null);
+        canvas.drawBitmap(scaledOverlay, new Matrix(), null);
         canvas.save();
         return bmOverlay;
     }
