@@ -105,7 +105,12 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     public static Handler mHandler;
     public static BottomSheet SearchViewPopup = null;
     public static Drawable searchDrawable;
-
+    public static String URL1;
+    public static String URL2;
+    public static String URL3;
+    public static String URL4;
+    public static String URL5;
+    public static String URL6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -282,7 +287,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         Log.v("Angie", "query string is " + mQuery);
         try {
             url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
-                    "v=1.0&q="+mQuery+"&as_filetype=png&imgc=trans&rsz=4");
+                    "v=1.0&q="+mQuery+"&as_filetype=png&imgc=trans&rsz=6");
             connection = url.openConnection();
             String line;
             StringBuilder builder = new StringBuilder();
@@ -354,17 +359,33 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     }
 
     public static void updateSearchSlider(String queryText) {
+        if (queryText.isEmpty()) {
+            queryText="Swiper";
+        }
         new SearchQueryTask(thisAct, queryText).execute(queryText);
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
                 // This is where you do your work in the UI thread.
                 // Your worker tells you in the message what to do.
-                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
                 // Associate searchable configuration with the SearchView
 
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
                     try {
+                        if (i==0) {
+                            URL1=message.getData().get("URL"+i).toString();
+                        }else if (i==1) {
+                            URL2=message.getData().get("URL"+i).toString();
+                        }else if (i==2) {
+                            URL3=message.getData().get("URL"+i).toString();
+                        }else if (i==3) {
+                            URL4=message.getData().get("URL"+i).toString();
+                        }else if (i==4) {
+                            URL5=message.getData().get("URL"+i).toString();
+                        }else if (i==5) {
+                            URL6=message.getData().get("URL"+i).toString();
+                        }
+                        Log.v("Angie", "here in update"+ message.getData().get("URL"+i).toString());
                         Drawable d = new DownloadImageTask(message.getData().get("URL"+i).toString())
                                 .execute(message.getData().get("URL"+i).toString()).get();
                         SearchViewPopup.getMenu().getItem(i).setIcon(d);
@@ -388,18 +409,18 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 // This is where you do your work in the UI thread.
                 // Your worker tells you in the message what to do.
                 Log.v("Angie", "total " + message.getData().getInt("Total"));
-                final String s1= message.getData().getString("fullResURL0");
-                Log.v("Angie", "first link" + s1);
-                final String s2= message.getData().getString("fullResURL1");
-                Log.v("Angie", "first link" + s2);
-                final String s3= message.getData().getString("fullResURL2");
-                Log.v("Angie", "first link" + s3);
-                final String s4= message.getData().getString("fullResURL3");
-                Log.v("Angie", "first link" + s4);
-                final String s5= message.getData().getString("fullResURL4");
-                Log.v("Angie", "first link" + s5);
-                final String s6= message.getData().getString("fullResURL5");
-                Log.v("Angie", "first link" + s6);
+                URL1= message.getData().getString("fullResURL0");
+                //Log.v("Angie", "first link" + s1);
+                URL2= message.getData().getString("fullResURL1");
+                //Log.v("Angie", "first link" + s2);
+                URL3= message.getData().getString("fullResURL2");
+                //Log.v("Angie", "first link" + s3);
+                URL4= message.getData().getString("fullResURL3");
+                //Log.v("Angie", "first link" + s4);
+                URL5= message.getData().getString("fullResURL4");
+                //Log.v("Angie", "first link" + s5);
+                URL6= message.getData().getString("fullResURL5");
+                //Log.v("Angie", "first link" + s6);
 
                 BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
                     @Override
@@ -407,7 +428,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         switch (which) {
                             case R.id.Img1:
                                 try {
-                                    searchDrawable = new DownloadImageTask(s1).execute(s1).get();
+                                    searchDrawable = new DownloadImageTask(URL1).execute(URL1).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
@@ -415,7 +436,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                                 break;
                             case R.id.Img2:
                                 try {
-                                    searchDrawable = new DownloadImageTask(s2).execute(s2).get();
+                                    searchDrawable = new DownloadImageTask(URL2).execute(URL2).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
@@ -423,7 +444,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                                 break;
                             case R.id.Img3:
                                 try {
-                                    searchDrawable = new DownloadImageTask(s3).execute(s3).get();
+                                    searchDrawable = new DownloadImageTask(URL3).execute(URL3).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
@@ -431,7 +452,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                                 break;
                             case R.id.Img4:
                                 try {
-                                    Drawable d = new DownloadImageTask(s4).execute(s4).get();
+                                    Drawable d = new DownloadImageTask(URL4).execute(URL4).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
@@ -439,7 +460,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                                 break;
                             case R.id.Img5:
                                 try {
-                                    searchDrawable = new DownloadImageTask(s5).execute(s5).get();
+                                    searchDrawable = new DownloadImageTask(URL5).execute(URL5).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
@@ -447,7 +468,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                                 break;
                             case R.id.Img6:
                                 try {
-                                    searchDrawable = new DownloadImageTask(s6).execute(s6).get();
+                                    searchDrawable = new DownloadImageTask(URL6).execute(URL6).get();
                                     ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
                                     iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
