@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 
@@ -55,6 +56,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     @InjectView(R.id.overlay) ImageView mOverlayPng;
     @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
+    @InjectView(R.id.imgButtonLeft) ImageView imgButtonLeft;
+    @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
+    @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
     private SlidingUpPanelLayout SlidePanel = null;
     private GestureDetectorCompat mDetector;
@@ -63,6 +67,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
     ListIterator<Overlay> itr;
     LinearLayout imageGallery;
+    private String left;
+    private String mid;
+    private String right;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,45 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         previouslySelected = null;
         getSupportActionBar().hide();
         getTopNTrending(20);
+        left = "Search";
+        mid = "Location";
+        right = "Trending";
+    }
+
+    public void topNavClicked(View v) {
+        if (v.equals(imgButtonLeft)){
+            textButtonMiddle.setText(left);
+            if (mid.equals("Location")) {
+                imgButtonLeft.setImageResource(R.drawable.ic_location_on_black_24dp);
+                mid = left;
+                left = "Location";
+            } else if (mid.equals("Search")) {
+                imgButtonLeft.setImageResource(R.drawable.ic_search_black_24dp);
+                mid = left;
+                left = "Search";
+            } else {
+                imgButtonLeft.setImageResource(R.drawable.ic_trending_up_black_24dp);
+                mid = left;
+                left = "Trending";
+            }
+        } else if (v.equals(imgButtonRight)) {
+            textButtonMiddle.setText(right);
+            if (mid.equals("Location")) {
+                imgButtonRight.setImageResource(R.drawable.ic_location_on_black_24dp);
+                mid = right;
+                right = "Location";
+            } else if (mid.equals("Search")) {
+                imgButtonRight.setImageResource(R.drawable.ic_search_black_24dp);
+                mid = right;
+                right = "Search";
+            } else {
+                imgButtonRight.setImageResource(R.drawable.ic_trending_up_black_24dp);
+                mid = right;
+                right = "Trending";
+            }
+        } else {
+
+        }
     }
 
     public void PullUpSharedScreen(View view) {
