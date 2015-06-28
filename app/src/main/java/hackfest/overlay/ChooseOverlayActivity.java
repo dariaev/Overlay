@@ -7,6 +7,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,7 +58,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         SlidePanel.setAnchorPoint(400);
         SlidePanel.setShadowHeight(0);
         SlidePanel.setPanelHeight(0);
-        // saveOverlayedImage();
         getTopNTrending(20);
     }
 
@@ -70,9 +70,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         BottomSheet share = new BottomSheet.Builder(this).title("Share").grid().sheet(R.menu.sharemenu).listener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Bitmap screenshot = Bitmap.createBitmap(65, 54, Bitmap.Config.RGB_565);
+                Bitmap overlayedBitmap = getOverlayedBitmap(mSelectedPhoto, mOverlayPng);
 
-                String path = MediaStore.Images.Media.insertImage(getContentResolver(), screenshot, "title", null);
+                String path = MediaStore.Images.Media.insertImage(getContentResolver(), overlayedBitmap, "title", null);
                 Uri screenshotUri = Uri.parse(path);
 
                 switch (which) {
@@ -80,6 +80,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         //q.toast("Help me!");
                         break;
                     case R.id.Download:
+                        saveOverlayedImage(overlayedBitmap);
+                        Toast.makeText(ChooseOverlayActivity.this, "Your image is saving", Toast.LENGTH_LONG).show();
                         break;
                     case R.id.Email:
                         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
@@ -144,17 +146,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(image));
         startActivity(sharingIntent); */
     }
-    private void saveOverlayedImage() {
+    private void saveOverlayedImage(Bitmap bmOverlay) {
         // processes two images, merges them and saves the result
-        Bitmap selectedPhotoBitmap = imageViewToBitmap(mSelectedPhoto);
-        Bitmap overlayBitmap = imageViewToBitmap(mOverlayPng);
-        Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
-                selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bmOverlay);
-        canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
-        canvas.drawBitmap(overlayBitmap, new Matrix(), null);
-        canvas.save();
 
         // saving the bitmap
         try {
@@ -170,6 +163,20 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
+    private Bitmap getOverlayedBitmap(ImageView selectedPhoto, ImageView overlay) {
+        Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
+        Bitmap overlayBitmap = ((BitmapDrawable)overlay.getDrawable()).getBitmap();
+
+        Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
+                selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(bmOverlay);
+        canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
+        canvas.drawBitmap(overlayBitmap, new Matrix(), null);
+        canvas.save();
+        return bmOverlay;
+    }
+
     private Bitmap imageViewToBitmap(ImageView imageView) {
         imageView.setDrawingCacheEnabled(true);
         // Without it the view will have a dimension of 0,0 and the bitmap will be null
@@ -179,7 +186,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 imageView.getMeasuredHeight());
 
         imageView.buildDrawingCache();
-        return imageView.getDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+        return bitmap;
     }
 
     private void populateGallery() {
