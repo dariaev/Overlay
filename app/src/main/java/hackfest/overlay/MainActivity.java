@@ -1,9 +1,11 @@
 package hackfest.overlay;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -20,8 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +33,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -37,7 +45,9 @@ public class MainActivity extends ActionBarActivity {
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-
+    private LocationListener locationListener;
+    private double lastLong=-1;
+    private double lastLat=-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,14 +68,43 @@ public class MainActivity extends ActionBarActivity {
         ParseObject testObject = new ParseObject("TestObject");
         testObject.put("foo", "bar");
         testObject.saveInBackground();
-        //ParseUploadImage();
-    }
 
+        locationListener = new MyLocLis();
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        //ParseUploadOverlay();
+    }
+    private class MyLocLis implements LocationListener {
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // called when the GPS provider is turned off (user turning off the GPS on the phone)
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // called when the GPS provider is turned on (user turning on the GPS on the phone)
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // called when the status of the GPS provider changes
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            lastLong = location.getLongitude();
+            lastLat = location.getLatitude();
+            Log.v("Angie", "long" + lastLong + " lat " + lastLat);
+        };
+    }
     public void openDrawer(View view) {
             mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
     public void CapturePhoto(View view){
+        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+        startActivity(intent);
         //TODO: Rohan
     }
     private byte[] readInFile(String path) throws IOException {
@@ -89,14 +128,18 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, ChooseOverlayActivity.class);
         startActivity(intent);
     }
-    private void ParseUploadImage() {
-        String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/dinner.jpg";
-        //Bitmap bitmap = BitmapFactory.decodeFile(path);
-        // Convert it to byte
-        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // Compress image to lower quality scale 1 - 100
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        Log.v("Angie", path);
+    private void ParseUploadOverlay() {
+        //ParseObject testObject = new ParseObject("TestObject");
+        //testObject.put("foo", "bar");
+        //testObject.saveInBackground();
+
+        //get metadata first
+        Calendar c = Calendar.getInstance();
+        Long time = c.getTimeInMillis();
+
+        //get file path
+        String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/ed.png";
+
         byte[] image = null;
         try {
             image = readInFile(path);
@@ -106,16 +149,26 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Create the ParseFile
-        ParseFile file = new ParseFile("picturePath", image);
+        String title="EdwardCullen";
+        ParseFile file = new ParseFile(title, image);
         // Upload the image into Parse Cloud
         file.saveInBackground();
 
         // Create a New Class called "ImageUpload" in Parse
-        ParseObject imgupload = new ParseObject("Image");
+        ParseObject imgupload = new ParseObject("Overlay");
 
         // Create a column named "ImageName" and set the string
-        imgupload.put("Image", "picturePath");
-
+        imgupload.put("Overlay", path);
+        imgupload.put("Latitude", lastLat);
+        imgupload.put("Longitude", lastLong);
+        imgupload.put("UseCount", 0);
+        imgupload.put("TryCount", 0);
+        imgupload.put("Time", time);
+        imgupload.put("Tag1", "");
+        imgupload.put("Tag2", "");
+        imgupload.put("Tag3", "");
+        imgupload.put("Tag4", "");
+        imgupload.put("Tag5", "");
 
         // Create a column named "ImageFile" and insert the image
         imgupload.put("ImageFile", file);
