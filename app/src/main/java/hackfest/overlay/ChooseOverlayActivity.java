@@ -430,6 +430,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         }
                     }
                 }).build();
+                share.dismissable=false;
                 share.show();
                 SearchViewPopup=share;
                 // Associate searchable configuration with the SearchView

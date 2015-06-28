@@ -100,7 +100,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private String sNavBarOverride;
     private boolean mNavBarAvailable;
     private float mSmallestWidthDp;
-
+    public boolean dismissable=true;
 
     private ImageView icon;
 
@@ -444,12 +444,18 @@ public class BottomSheet extends Dialog implements DialogInterface {
                 }
 
                 if (!((ActionMenuItem) adapter.getItem(position)).invoke()) {
-                    if (builder.menulistener != null)
+                    if (builder.menulistener != null) {
                         builder.menulistener.onMenuItemClick((MenuItem) adapter.getItem(position));
-                    else if (builder.listener != null)
+                    }
+                    else if (builder.listener != null) {
                         builder.listener.onClick(BottomSheet.this, ((MenuItem) adapter.getItem(position)).getItemId());
+                        ((MenuItem) adapter.getItem(position)).setChecked(true);
+                        ((MenuItem) adapter.getItem(position)).setEnabled(false);
+                    }
                 }
-                dismiss();
+                if (dismissable) {
+                    dismiss();
+                }
             }
         });
 
