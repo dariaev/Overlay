@@ -97,7 +97,7 @@ android:layout_height="match_parent">
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="25dp"
-                    android:text="Angel Sun"
+                    android:text="Angela Sun"
                     />
                 <TextView
                     android:layout_width="300dp"
@@ -121,14 +121,15 @@ android:layout_height="match_parent">
             android:id="@+id/Social"
             android:layout_width="300dp"
             android:layout_height="100dp"
-            android:text="Friends and stuff"
+            android:text="Activity Feed"
+            android:onClick="launchactivityfeed"
             />
         <ListView
             android:id="@+id/navList"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="left|start"
-            android:background="#ffeeeeee"/>
+            android:background="@color/midnight_blue"/>
     </LinearLayout>
 
 </android.support.v4.widget.DrawerLayout>

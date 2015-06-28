@@ -78,7 +78,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
-        addDrawerItems();
+        //addDrawerItems();
         setupDrawer();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -138,6 +138,12 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
             ((OverlayApp)getApplication()).lastLat = location.getLatitude();
         }
     }
+
+    public void launchactivityfeed(View view) {
+        Intent intent = new Intent(this, FriendsActivity.class);
+        startActivity(intent);
+    }
+
     public void openDrawer(View view) {
             mDrawerLayout.openDrawer(Gravity.LEFT);
     }
