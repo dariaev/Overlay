@@ -498,22 +498,23 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     }
 
     private Bitmap getOverlayedBitmap(ImageView selectedPhoto, ImageView overlay) {
-        Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
         if (overlay.getDrawable() == null) {
             Toast.makeText(this, "Select an overlay", Toast.LENGTH_LONG).show();
             return null;
         } else {
             Bitmap overlayBitmap = ((BitmapDrawable) overlay.getDrawable()).getBitmap();
-            float aspectRatio = overlayBitmap.getWidth() / (float) overlayBitmap.getHeight();
-            int newHeight = Math.round(selectedPhoto.getWidth() / aspectRatio);
-            Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
+            Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
+            float aspectRatio = selectedPhotoBitmap.getWidth() / (float) selectedPhotoBitmap.getHeight();
+            int newWidth = (int) 1.4 * overlayBitmap.getWidth();
+            int newHeight = (int) 1.4 * Math.round(overlayBitmap.getWidth() / aspectRatio);
+            Bitmap scaledSelectedPhoto = Bitmap.createScaledBitmap(selectedPhotoBitmap, newWidth,
                     newHeight, true);
-            Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
-                    selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
+            Bitmap bmOverlay = Bitmap.createBitmap(scaledSelectedPhoto.getWidth(),
+                    scaledSelectedPhoto.getHeight(), scaledSelectedPhoto.getConfig());
             Canvas canvas = new Canvas();
             canvas.setBitmap(bmOverlay);
-            canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
-            canvas.drawBitmap(scaledOverlay, new Matrix(), null);
+            canvas.drawBitmap(scaledSelectedPhoto, new Matrix(), null);
+            canvas.drawBitmap(overlayBitmap, (float)(newWidth * 0.2), (float)0, null);
             canvas.save();
             return bmOverlay;
         }
