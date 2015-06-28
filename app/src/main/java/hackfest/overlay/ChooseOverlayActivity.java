@@ -709,13 +709,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     iv.setImageDrawable(d);
                     iv.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
-                            if(previouslySelected != null){
-                                previouslySelected.setBackgroundResource(Color.TRANSPARENT);
-                                previouslySelected = (ImageView) v;
-                            }
                             ImageView i = (ImageView) v;
                             previouslySelected = i;
-                            v.setBackgroundResource(R.color.background_material_dark);
                             mOverlayPng.setImageDrawable(d);
                         }
                     });
