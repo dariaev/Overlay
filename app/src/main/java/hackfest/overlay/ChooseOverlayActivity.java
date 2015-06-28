@@ -12,14 +12,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.view.View.OnClickListener;
 
 import com.cocosw.bottomsheet.BottomSheet;
 import com.parse.FindCallback;
@@ -29,6 +38,7 @@ import com.parse.ParseQuery;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.List;
 
 import java.io.File;
@@ -43,27 +53,82 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     @InjectView(R.id.overlay) ImageView mOverlayPng;
     @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
-
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
     private SlidingUpPanelLayout SlidePanel = null;
+    private GestureDetectorCompat mDetector;
+    private boolean lastWasPrev;
+    final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
+    ListIterator<Overlay> itr;
+    LinearLayout imageGallery;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_overlay);
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         ButterKnife.inject(this);
-        populateGallery();
+        imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+        getAllOverlays();
+        lastWasPrev = false;
         getSupportActionBar().hide();
-        SlidePanel = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        SlidePanel.setOverlayed(true);
-        SlidePanel.setAnchorPoint(400);
-        SlidePanel.setShadowHeight(0);
-        SlidePanel.setPanelHeight(0);
         getTopNTrending(20);
     }
 
     public void PullUpSharedScreen(View view) {
         SlidePanel.setVisibility(View.VISIBLE);
         SlidePanel.setPanelHeight(600);
+        imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+        lastWasPrev = false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
+            if(velocityX > 0) {
+                Overlay img;
+                if (!itr.hasNext()) {
+                    itr = allOverlays.listIterator();
+                }
+                if (lastWasPrev) {
+                    img = itr.next();
+                }
+                Log.d("BLAH","BLAH");
+                img = itr.next();
+                Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                Drawable d = new BitmapDrawable(getResources(), bmp);
+                mOverlayPng.setImageDrawable(d);
+                lastWasPrev = false;
+                return true;
+            } else {
+                Overlay img = null;
+                if (!itr.hasPrevious()){
+                    while(itr.hasNext()){
+                        img = itr.next();
+                    }
+                } else {
+                    img = itr.previous();
+                }
+                if (!lastWasPrev) {
+                    img = itr.previous();
+                }
+                Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                Drawable d = new BitmapDrawable(getResources(), bmp);
+                mOverlayPng.setImageDrawable(d);
+                Log.d("HERE","HERE");
+                lastWasPrev = true;
+                return true;
+            }
+        }
     }
 
     public void ShareViaEmail(View view) {
@@ -190,13 +255,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         return bitmap;
     }
 
-    private void populateGallery() {
-        LinearLayout imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
-        for (int i = 0; i < 10; i++) {
-            imageGallery.addView(getImageView(R.drawable.angie_head_circle));
-        }
-    }
-
     private View getImageView(Integer image) {
         ImageView imageView = new ImageView(getApplicationContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
@@ -283,7 +341,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     //possible that this will return an empty list
     public ArrayList<Overlay> getAllOverlays() {
-        final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
         ParseQuery query = new ParseQuery("Overlay");
         Log.d("Angie", "Retrieved  Brands");
 
@@ -311,7 +368,23 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     Overlay overlay = new Overlay(object);
                     allOverlays.add(overlay);
                 }
-
+                for (Overlay img : allOverlays) {
+                    Log.d("Noah","img read");
+                    ImageView iv = new ImageView(getApplicationContext());
+                    Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                    final Drawable d = new BitmapDrawable(getResources(), bmp);
+                    iv.setImageDrawable(d);
+                    iv.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            mOverlayPng.setImageDrawable(d);
+                        }
+                    });
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
+                    lp.setMargins(0, 0, 50, 0);
+                    iv.setLayoutParams(lp);
+                    imageGallery.addView(iv);
+                }
+                itr = allOverlays.listIterator();
             }
         });
         return allOverlays;

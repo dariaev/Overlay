@@ -8,18 +8,6 @@
     tools:context="hackfest.overlay.ChooseOverlayActivity"
     android:id="@+id/root_choose_overlay">
 
-    <com.sothree.slidinguppanel.SlidingUpPanelLayout
-        xmlns:sothree="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sliding_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        sothree:umanoPanelHeight="68dp"
-        sothree:umanoShadowHeight="4dp"
-        sothree:umanoParalaxOffset="100dp"
-        sothree:umanoDragView="@+id/dragView"
-        sothree:umanoOverlay="true">
-
         <!-- MAIN CONTENT -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,7 +117,8 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/horizontalScrollView">
+                    android:id="@+id/horizontalScrollView"
+                    android:scrollbars="none">
 
                     <LinearLayout
                         android:id="@+id/imageGallery"
@@ -142,58 +131,5 @@
             </LinearLayout>
         </LinearLayout>
         <!-- SLIDING LAYOUT -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="false"
-            android:id="@+id/dragView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"/>
-
-                <Button
-                    android:id="@+id/follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="14sp"
-                    android:text="something"
-                    android:gravity="center_vertical|right"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"/>
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:scaleType="fitStart"
-                android:src="@drawable/angie_head_circle" >
-            </ImageView>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/angie_head_circle"
-                android:onClick="ShareViaEmail"
-                ></ImageView>
-        </LinearLayout>
-    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
-
-
 
 </LinearLayout>
