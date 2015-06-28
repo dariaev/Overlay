@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/Img1" android:title="Img1" android:icon="@drawable/downloadmaterial" />
+    <item android:id="@+id/Img1" android:icon="@drawable/downloadmaterial" />
     <item android:id="@+id/Img2" android:icon="@drawable/downloadmaterial"/>
-    <item android:id="@+id/Img3" android:title="Email" android:icon="@drawable/downloadmaterial"/>
-    <item android:id="@+id/Img4" android:title="Instagram" android:icon="@drawable/downloadmaterial"/>
-    <item android:id="@+id/Img5" android:title="Tumblr" android:icon="@drawable/downloadmaterial"/>
-    <item android:id="@+id/Img6" android:title="Twitter" android:icon="@drawable/downloadmaterial"/>
+    <item android:id="@+id/Img3" android:icon="@drawable/downloadmaterial"/>
+    <item android:id="@+id/Img4" android:icon="@drawable/downloadmaterial"/>
+    <item android:id="@+id/Img5" android:icon="@drawable/downloadmaterial"/>
+    <item android:id="@+id/Img6" android:icon="@drawable/downloadmaterial"/>
 </menu>

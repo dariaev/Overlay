@@ -100,7 +100,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private int scrollIdx;
     public static Activity thisAct = null;
     public static Handler mHandler;
-    public BottomSheet SearchViewPopup = null;
+    public static BottomSheet SearchViewPopup = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,6 +331,32 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
+    public static void updateSearchSlider(String queryText) {
+        new SearchQueryTask(thisAct, queryText).execute(queryText);
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                // This is where you do your work in the UI thread.
+                // Your worker tells you in the message what to do.
+                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
+                // Associate searchable configuration with the SearchView
+
+                for (int i=0; i<message.getData().getInt("Total"); i++) {
+                    try {
+                        Drawable d = new DownloadImageTask()
+                                .execute(message.getData().get("URL"+i).toString()).get();
+                        SearchViewPopup.getMenu().getItem(i).setIcon(d);
+                    }
+                    catch(Exception e) {
+
+                    }
+                }
+                SearchViewPopup.invalidate();
+                removeMessages(0);
+                //message.
+            }
+        };
+    }
     public static void ShowSearchSlider(String queryText) {
         new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
@@ -338,18 +364,19 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             public void handleMessage(Message message) {
                 // This is where you do your work in the UI thread.
                 // Your worker tells you in the message what to do.
-                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
-
                 BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case R.id.Facebook:
                                 break;
+                            default:
+                                break;
                         }
                     }
                 }).build();
                 share.show();
+                SearchViewPopup=share;
                 // Associate searchable configuration with the SearchView
 
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
@@ -357,7 +384,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     try {
                         Drawable d = new DownloadImageTask()
                                 .execute(message.getData().get("URL"+i).toString()).get();
-                        share.getMenu().getItem(i+1).setIcon(d);
+                        share.getMenu().getItem(i).setIcon(d);
                     }
                     catch(Exception e) {
 
@@ -433,7 +460,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 }
             }
         }).build();
-        share.hideSearchBar(true);
+        //share.hideSearchBar(true);
 
         share.show();
     }
