@@ -50,6 +50,8 @@
                     android:text="Location"
                     android:id="@+id/textButtonMiddle"
                     android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="midClick"
                     android:layout_gravity="center"
                     android:textIsSelectable="false"
                     android:textSize="20dp"
