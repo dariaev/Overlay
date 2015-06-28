@@ -132,6 +132,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         right = "Trending";
     }
 
+    public void midClick(View v){
+        TextView tv = (TextView) v;
+        if (((TextView) v).getText().equals("Search")){
+            ShowSearchSlider(null);
+        }
+    }
+
     public void topNavClicked(View v) {
         if (v.equals(imgButtonLeft)){
             textButtonMiddle.setText(left);
