@@ -53,7 +53,7 @@
             android:padding="5dp"
             android:adjustViewBounds="true"
             android:layout_gravity="center"
-            tools:src="@drawable/greylock_sample"/>
+            android:src="@drawable/greylock_sample"/>
 
         <ImageView
             android:id="@+id/overlay"
@@ -111,7 +111,7 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/horizontalScrollView">
 
             <LinearLayout
