@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     public static String photoExtra = "PHOTO_EXTRA";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
-
+    byte[] img;
     Camera mCamera;
     private PictureCallback mPicture;
     SurfaceView surfaceView;
@@ -100,7 +100,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         jpegCallback = new PictureCallback() {
-
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
                 FileOutputStream outStream = null;
@@ -299,6 +298,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         photoPickerIntent.setType("image/*"); // to pick only images
         photoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(photoPickerIntent, SELECT_PICTURE_ACTIVITY_RESULT_CODE);
+
     }
 
     public byte[] getBytes(InputStream inputStream) throws IOException {
@@ -325,10 +325,10 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
                     try {
                         InputStream iStream =   getContentResolver().openInputStream(selectedImageUri);
                         byte[] inputData = getBytes(iStream);
+                        ((OverlayApp)getApplication()).setImage(inputData);
+                        ((OverlayApp)getApplication()).setFlag(false);
                         Intent intent = new Intent(this, ChooseOverlayActivity.class);
-                        intent.putExtra("Upload_overlay_bytes", inputData);
                         startActivity(intent);
-
                         Log.v("Yeezy", "NorthWest");
                     }
                     catch (Exception e) {
@@ -438,6 +438,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
                    @Override
                    protected Object doInBackground(Object[] params) {
                        ((OverlayApp)getApplication()).setImage(data);
+                       ((OverlayApp)getApplication()).setFlag(true);
                        //Toast.makeText(MainActivity.this, "Picture saved", Toast.LENGTH_LONG).show();
                        return null;
                    }

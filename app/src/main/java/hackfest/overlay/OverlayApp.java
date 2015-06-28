@@ -18,7 +18,13 @@ public class OverlayApp extends Application {
     public void setImage(byte[] image) {
         this.image = image;
     }
-
+    public void setFlag(boolean new_value) {
+        this.isNewPicture = new_value;
+    }
+    public boolean getFlag() {
+        return this.isNewPicture;
+    }
+    private boolean isNewPicture;
     private byte[] image;
     public double lastLong=-1;
     public double lastLat=-1;

@@ -94,7 +94,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         // input bitmap is off by 90 degrees
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(input, 0, input.length);
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+        if (((OverlayApp)getApplication()).getFlag() == true) {
+            matrix.postRotate(90);
+        }
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap,imageBitmap.getWidth(),
                 imageBitmap.getHeight(),true);
         Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(),
