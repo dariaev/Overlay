@@ -32,6 +32,16 @@
             android:name=".ChooseOverlayActivity"
             android:label="@string/title_activity_choose_overlay" >
         </activity>
+        <!--
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1010383305647710"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" /> -->
+
     </application>
 
 </manifest>

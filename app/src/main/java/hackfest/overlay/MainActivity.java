@@ -68,8 +68,8 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     private LocationListener locationListener;
-    private double lastLong=-1;
-    private double lastLat=-1;
+    static public double lastLong=-1;
+    static public double lastLat=-1;
 
     Camera camera;
     SurfaceView surfaceView;
@@ -160,7 +160,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         public void onLocationChanged(Location location) {
             lastLong = location.getLongitude();
             lastLat = location.getLatitude();
-            Log.v("Angie", "long" + lastLong + " lat " + lastLat);
         };
     }
     public void openDrawer(View view) {
