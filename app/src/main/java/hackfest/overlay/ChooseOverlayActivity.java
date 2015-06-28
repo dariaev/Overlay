@@ -101,6 +101,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     public static Activity thisAct = null;
     public static Handler mHandler;
     public static BottomSheet SearchViewPopup = null;
+    public static Drawable searchDrawable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -364,6 +365,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             }
         };
     }
+
     public static void ShowSearchSlider(String queryText) {
         new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
@@ -391,37 +393,49 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         switch (which) {
                             case R.id.Img1:
                                 try {
-                                    Drawable d = new DownloadImageTask(s1).execute(s1).get();
+                                    searchDrawable = new DownloadImageTask(s1).execute(s1).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
                             case R.id.Img2:
                                 try {
-                                    Drawable d = new DownloadImageTask(s2).execute(s2).get();
+                                    searchDrawable = new DownloadImageTask(s2).execute(s2).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
                             case R.id.Img3:
                                 try {
-                                    Drawable d = new DownloadImageTask(s3).execute(s3).get();
+                                    searchDrawable = new DownloadImageTask(s3).execute(s3).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
                             case R.id.Img4:
                                 try {
                                     Drawable d = new DownloadImageTask(s4).execute(s4).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
                             case R.id.Img5:
                                 try {
-                                    Drawable d = new DownloadImageTask(s5).execute(s5).get();
+                                    searchDrawable = new DownloadImageTask(s5).execute(s5).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
                             case R.id.Img6:
                                 try {
-                                    Drawable d = new DownloadImageTask(s6).execute(s6).get();
+                                    searchDrawable = new DownloadImageTask(s6).execute(s6).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
                                 } catch (Exception e) {
                                 }
                                 break;
