@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
@@ -60,6 +61,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @InjectView(R.id.imgButtonLeft) ImageView imgButtonLeft;
     @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
     @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
+    @InjectView(R.id.horizontalScrollView) HorizontalScrollView scrollView;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
     final ArrayList<Overlay> topNlocation = new ArrayList<Overlay>();
     final ArrayList<Overlay> trending = new ArrayList<Overlay>();
@@ -73,6 +75,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private String left;
     private String mid;
     private String right;
+    private int scrollIdx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +148,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY) {
+            int scrollIdx = -1;
             Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
             if(velocityX > 0) {
                 Overlay img;
@@ -156,25 +160,29 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     }
                 }
                 if (lastWasPrev) {
+                    scrollIdx = itr.nextIndex();
                     img = itr.next();
                 }
                 Log.d("BLAH","BLAH");
+                scrollIdx = itr.nextIndex();
                 img = itr.next();
                 Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
                 Drawable d = new BitmapDrawable(getResources(), bmp);
                 mOverlayPng.setImageDrawable(d);
                 lastWasPrev = false;
-                return true;
             } else {
                 Overlay img = null;
                 if (!itr.hasPrevious()){
                     while(itr.hasNext()){
+                        scrollIdx = itr.nextIndex();
                         img = itr.next();
                     }
                 } else {
+                    scrollIdx = itr.previousIndex();
                     img = itr.previous();
                 }
                 if (!lastWasPrev) {
+                    scrollIdx = itr.previousIndex();
                     img = itr.previous();
                 }
                 Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
@@ -182,8 +190,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 mOverlayPng.setImageDrawable(d);
                 Log.d("HERE","HERE");
                 lastWasPrev = true;
-                return true;
             }
+            if(scrollIdx != -1) scrollView.smoothScrollTo(scrollIdx*200+(scrollIdx-1)*50,0);
+            return true;
         }
     }
 
@@ -353,22 +362,20 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     }
                 }
                 imageGallery.removeAllViews();
+                int idx = 0;
                 for (Overlay img : trending) {
+                    final int scrollIdx = idx;
                     Log.d("Noah","img read");
+                    idx++;
                     ImageView iv = new ImageView(getApplicationContext());
                     Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
                     final Drawable d = new BitmapDrawable(getResources(), bmp);
                     iv.setImageDrawable(d);
                     iv.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
-                            if(previouslySelected != null){
-                                previouslySelected.setBackgroundResource(Color.TRANSPARENT);
-                                previouslySelected = (ImageView) v;
-                            }
                             ImageView i = (ImageView) v;
-                            previouslySelected = i;
-                            v.setBackgroundResource(R.color.background_material_dark);
                             mOverlayPng.setImageDrawable(d);
+                            scrollView.smoothScrollTo(scrollIdx*200+(scrollIdx-1)*50,0);
                         }
                     });
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
