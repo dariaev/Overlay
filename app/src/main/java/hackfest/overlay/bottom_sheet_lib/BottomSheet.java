@@ -600,9 +600,9 @@ public class BottomSheet extends Dialog implements DialogInterface {
     public void performSearch() {
         LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
         EditText ed = (EditText) e.findViewById(R.id.searchenter);
-        ChooseOverlayActivity.ShowSearchSlider(ed.getText().toString());
-        Log.v("Angie", "angie implement perform search yo! ");
+        ChooseOverlayActivity.updateSearchSlider(ed.getText().toString());
     }
+
     @SuppressWarnings("SameParameterValue")
     @TargetApi(19)
     private void setTranslucentStatus(boolean on) {

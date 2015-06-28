@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/Download" android:title="Download" android:icon="@drawable/downloadmaterial"/>
+    <item android:id="@+id/Download" android:title="Download" android:icon="@drawable/greydownload"/>
     <item android:id="@+id/Facebook" android:title="Facebook" android:icon="@drawable/facebookmaterial"/>
     <item android:id="@+id/Email" android:title="Email" android:icon="@drawable/gmailmaterial"/>
     <item android:id="@+id/Instagram" android:title="Instagram" android:icon="@drawable/instagramicon"/>

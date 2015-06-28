@@ -100,7 +100,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private int scrollIdx;
     public static Activity thisAct = null;
     public static Handler mHandler;
-    public BottomSheet SearchViewPopup = null;
+    public static BottomSheet SearchViewPopup = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -331,6 +331,32 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
+    public static void updateSearchSlider(String queryText) {
+        new SearchQueryTask(thisAct, queryText).execute(queryText);
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                // This is where you do your work in the UI thread.
+                // Your worker tells you in the message what to do.
+                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
+                // Associate searchable configuration with the SearchView
+
+                for (int i=0; i<message.getData().getInt("Total"); i++) {
+                    try {
+                        Drawable d = new DownloadImageTask()
+                                .execute(message.getData().get("URL"+i).toString()).get();
+                        SearchViewPopup.getMenu().getItem(i).setIcon(d);
+                    }
+                    catch(Exception e) {
+
+                    }
+                }
+                SearchViewPopup.invalidate();
+                removeMessages(0);
+                //message.
+            }
+        };
+    }
     public static void ShowSearchSlider(String queryText) {
         new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
@@ -338,18 +364,19 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             public void handleMessage(Message message) {
                 // This is where you do your work in the UI thread.
                 // Your worker tells you in the message what to do.
-                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
-
                 BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case R.id.Facebook:
                                 break;
+                            default:
+                                break;
                         }
                     }
                 }).build();
                 share.show();
+                SearchViewPopup=share;
                 // Associate searchable configuration with the SearchView
 
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
@@ -357,7 +384,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     try {
                         Drawable d = new DownloadImageTask()
                                 .execute(message.getData().get("URL"+i).toString()).get();
-                        share.getMenu().getItem(i+1).setIcon(d);
+                        share.getMenu().getItem(i).setIcon(d);
                     }
                     catch(Exception e) {
 
@@ -395,13 +422,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
                         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out my Swiper photo!");
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         sendIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                         startActivity(sendIntent);
                         break;
                     case R.id.Twitter:
                         Intent tweetIntent = new Intent(Intent.ACTION_SEND);
-                        tweetIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        tweetIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         tweetIntent.setType("text/plain");
 
                         PackageManager packManager = getPackageManager();
@@ -422,21 +449,36 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
                         break;
                     case R.id.Facebook:
-                        Intent intent1 = new Intent();
+                        /*
+                        Intent intent1 = new Intent(Intent.ACTION_SEND);
                         intent1.setClassName("com.facebook.katana", "com.facebook.katana.activity.composer.ImplicitShareIntentHandler");
                         intent1.setAction("android.intent.action.SEND");
                         intent1.setType("text/plain");
-                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         intent1.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                        startActivity(intent1);
+                        startActivity(intent1);*/
 
+                        break;
+                    case R.id.Instagram:
+                        // Create the new Intent using the 'Send' action.
+                        Intent share = new Intent(Intent.ACTION_SEND);
+
+                        // Set the MIME type
+                        share.setType("text/plain");
+                        share.setPackage("com.instagram.android");
+
+                        // Add the URI and the caption to the Intent.
+                        share.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        share.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
+
+                        // Broadcast the Intent.
+                        startActivity(Intent.createChooser(share, "Share to"));
                         break;
                 }
             }
         }).build();
-        share.hideSearchBar(true);
-
         share.show();
+        share.hideSearchBar(true);
     }
     private void saveOverlayedImage(Bitmap bmOverlay) {
         // processes two images, merges them and saves the result
