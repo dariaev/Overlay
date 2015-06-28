@@ -108,7 +108,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        thisAct=this;
+        thisAct = this;
         setContentView(R.layout.activity_choose_overlay);
         ButterKnife.inject(this);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
@@ -310,9 +310,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
         return 3;
     }
-
-    protected void onPostExecute(Integer integer) {
-    }
 }
 
     public static class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
@@ -333,9 +330,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             Drawable d = new BitmapDrawable(thisAct.getResources(), mIcon11);
 
             return d;
-        }
-
-        protected void onPostExecute(Bitmap result) {
         }
     }
 
@@ -589,15 +583,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         imageView.buildDrawingCache();
         Bitmap bitmap = imageView.getDrawingCache();
         return bitmap;
-    }
-
-    private View getImageView(Integer image) {
-        ImageView imageView = new ImageView(getApplicationContext());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
-        lp.setMargins(0, 0, 50, 0);
-        imageView.setLayoutParams(lp);
-        imageView.setImageResource(image);
-        return imageView;
     }
 
     //possible that this will return an empty list
