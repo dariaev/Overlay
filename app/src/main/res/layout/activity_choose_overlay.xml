@@ -95,7 +95,8 @@
                     android:text="Upload"
                     android:id="@+id/upload"
                     android:gravity="center_horizontal"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:onClick="UploadImage"/>
 
 
                 <Button

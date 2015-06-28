@@ -10,6 +10,17 @@ import static com.parse.Parse.*;
  * Created by sunangel on 6/27/15.
  */
 public class OverlayApp extends Application {
+    
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    private byte[] image;
+
     @Override public void onCreate() {
         super.onCreate();
 

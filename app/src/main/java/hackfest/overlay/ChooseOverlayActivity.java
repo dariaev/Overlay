@@ -39,6 +39,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.List;
@@ -63,6 +68,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
     ListIterator<Overlay> itr;
     LinearLayout imageGallery;
+    private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,17 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         ButterKnife.inject(this);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+
+        byte[] input = ((OverlayApp) getApplication()).getImage();
+        // input bitmap is off by 90 degrees
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(input, 0, input.length);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap,imageBitmap.getWidth(),
+                imageBitmap.getHeight(),true);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(),
+                scaledBitmap.getHeight(), matrix, true);
+        mSelectedPhoto.setImageBitmap(rotatedBitmap);
         getAllOverlays();
         lastWasPrev = false;
         previouslySelected = null;
@@ -134,6 +151,54 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             }
         }
     }
+
+    public void UploadImage(View view) {
+        Intent photoPickerIntent = new Intent();
+        photoPickerIntent.setType("image/*"); // to pick only images
+        photoPickerIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(photoPickerIntent, SELECT_PICTURE_ACTIVITY_RESULT_CODE);
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        Log.v("Yeezy", "Kimmy");
+
+
+        return byteBuffer.toByteArray();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.v("Rorororo", "Rorohan");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SELECT_PICTURE_ACTIVITY_RESULT_CODE:
+                    Uri selectedImageUri = data.getData();
+                    try {
+                        InputStream iStream =   getContentResolver().openInputStream(selectedImageUri);
+                        byte[] inputData = getBytes(iStream);
+                        Intent intent = new Intent(this, ChooseOverlayActivity.class);
+                        intent.putExtra("Upload_overlay_bytes", inputData);
+                        startActivity(intent);
+
+                        Log.v("Yeezy", "NorthWest");
+                    }
+                    catch (Exception e) {
+                    }
+
+                default:
+                    // deal with it
+                    break;
+            }
+        }
+    }
+
 
     public void ShareViaEmail(View view) {
         BottomSheet share = new BottomSheet.Builder(this).title("Share").grid().sheet(R.menu.sharemenu).listener(new DialogInterface.OnClickListener() {

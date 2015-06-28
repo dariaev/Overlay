@@ -1,12 +1,13 @@
 package hackfest.overlay;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -25,11 +26,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,28 +36,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.ShutterCallback;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class MainActivity extends ActionBarActivity implements SurfaceHolder.Callback {
 
@@ -70,12 +55,14 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private LocationListener locationListener;
     static public double lastLong=-1;
     static public double lastLat=-1;
-    private String photoExtra = "PHOTO_EXTRA";
+    public static String photoExtra = "PHOTO_EXTRA";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
-    Camera camera;
+
+    Camera mCamera;
+    private PictureCallback mPicture;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
-    private byte[] img;
 
     Camera.PictureCallback rawCallback;
     Camera.ShutterCallback shutterCallback;
@@ -123,7 +110,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 //
 //                    outStream.write(data);
 //                    outStream.close();
-                img = data;
+//                img = data;
 
                 Toast.makeText(getApplicationContext(), "Picture Saved", Toast.LENGTH_LONG).show();
                 //refreshCamera();
@@ -157,10 +144,9 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
             mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
-    public void CapturePhoto(View view){
+    public void capturePhoto(View view){
         Intent intent = new Intent(this, ChooseOverlayActivity.class);
         startActivity(intent);
-        //TODO: Rohan
     }
     private byte[] readInFile(String path) throws IOException {
         // TODO Auto-generated method stub
@@ -311,10 +297,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     }
 
     public void captureImage(View v) throws IOException {
-        camera.takePicture(null, null, jpegCallback);
-        Intent intent = new Intent(MainActivity.this, ChooseOverlayActivity.class);
-        intent.putExtra(photoExtra,img);
-        startActivity(intent);
+        mCamera.takePicture(null, null, mPicture);
     }
 
     public void refreshCamera() {
@@ -323,15 +306,15 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         }
 
         try {
-            camera.stopPreview();
+            mCamera.stopPreview();
         }
 
         catch (Exception e) {
         }
 
         try {
-            camera.setPreviewDisplay(surfaceHolder);
-            camera.startPreview();
+            mCamera.setPreviewDisplay(surfaceHolder);
+            mCamera.startPreview();
         }
         catch (Exception e) {
         }
@@ -361,8 +344,9 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            camera = Camera.open();
-            camera.setDisplayOrientation(90);
+            mCamera = Camera.open();
+            mCamera.setDisplayOrientation(90);
+            mPicture = getPictureCallback();
         }
 
         catch (RuntimeException e) {
@@ -371,13 +355,13 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         }
 
         Camera.Parameters param;
-        param = camera.getParameters();
+        param = mCamera.getParameters();
         param.setPreviewSize(352, 288);
-        camera.setParameters(param);
+        mCamera.setParameters(param);
 
         try {
-            camera.setPreviewDisplay(surfaceHolder);
-            camera.startPreview();
+            mCamera.setPreviewDisplay(surfaceHolder);
+            mCamera.startPreview();
         }
 
         catch (Exception e) {
@@ -393,8 +377,57 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        camera.stopPreview();
-        camera.release();
-        camera = null;
+        mCamera.stopPreview();
+        mCamera.release();
+        mCamera = null;
     }
+
+
+    private PictureCallback getPictureCallback() {
+        PictureCallback mPicture = new PictureCallback() {
+            @Override
+            public void onPictureTaken(final byte[] data, Camera camera) {
+               AsyncTask<Void, Void, Void> task = new AsyncTask() {
+                   @Override
+                   protected Object doInBackground(Object[] params) {
+                       ((OverlayApp)getApplication()).setImage(data);
+                       //Toast.makeText(MainActivity.this, "Picture saved", Toast.LENGTH_LONG).show();
+                       return null;
+                   }
+
+                   @Override
+                   protected void onPostExecute(Object o) {
+                       super.onPostExecute(o);
+                       Intent intent = new Intent(MainActivity.this, ChooseOverlayActivity.class);
+                       startActivity(intent);
+                   }
+               };
+                task.execute();
+            }
+
+        };
+        return mPicture;
+    }
+
+
+
+    //make picture and save to a folder
+    private static File getOutputMediaFile() {
+        //make a new file directory inside the "sdcard" folder
+        File mediaStorageDir = new File("/sdcard/", "JCG Camera");
+        //if this "JCGCamera folder does not exist
+        if (!mediaStorageDir.exists()) {
+            //if you cannot make this folder return
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        //take the current timeStamp
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        //and make a media file:
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+        return mediaFile;
+    }
+
 }
