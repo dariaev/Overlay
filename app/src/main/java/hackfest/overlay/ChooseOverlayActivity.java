@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.view.View.OnClickListener;
 
 import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
@@ -228,8 +229,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     Log.d("Noah","img read");
                     ImageView iv = new ImageView(getApplicationContext());
                     Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
-                    Drawable d = new BitmapDrawable(getResources(), bmp);
+                    final Drawable d = new BitmapDrawable(getResources(), bmp);
                     iv.setImageDrawable(d);
+                    iv.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            mOverlayPng.setImageDrawable(d);
+                        }
+                    });
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
                     lp.setMargins(0, 0, 50, 0);
                     iv.setLayoutParams(lp);
