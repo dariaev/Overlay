@@ -133,6 +133,11 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         right = "Trending";
     }
 
+    public void backClicked(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public void midClick(View v){
         TextView tv = (TextView) v;
         if (((TextView) v).getText().equals("Search")){
@@ -455,6 +460,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bitmap overlayedBitmap = getOverlayedBitmap(mSelectedPhoto, mOverlayPng);
+                if (overlayedBitmap == null) return;
 
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), overlayedBitmap, "title", null);
                 Uri screenshotUri = Uri.parse(path);
@@ -537,21 +543,26 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     }
 
     private Bitmap getOverlayedBitmap(ImageView selectedPhoto, ImageView overlay) {
-        Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
-        Bitmap overlayBitmap = ((BitmapDrawable)overlay.getDrawable()).getBitmap();
-        float aspectRatio = overlayBitmap.getWidth() / (float) overlayBitmap.getHeight();
-        int newHeight = Math.round(selectedPhoto.getWidth() / aspectRatio);
-        Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
-                newHeight, true);
-
-        Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
-                selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bmOverlay);
-        canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
-        canvas.drawBitmap(scaledOverlay, new Matrix(), null);
-        canvas.save();
-        return bmOverlay;
+        if (overlay.getDrawable() == null) {
+            Toast.makeText(this, "Select an overlay", Toast.LENGTH_LONG).show();
+            return null;
+        } else {
+            Bitmap overlayBitmap = ((BitmapDrawable) overlay.getDrawable()).getBitmap();
+            Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
+            float aspectRatio = selectedPhotoBitmap.getWidth() / (float) selectedPhotoBitmap.getHeight();
+            int newWidth = (int) 1.4 * overlayBitmap.getWidth();
+            int newHeight = (int) 1.4 * Math.round(overlayBitmap.getWidth() / aspectRatio);
+            Bitmap scaledSelectedPhoto = Bitmap.createScaledBitmap(selectedPhotoBitmap, newWidth,
+                    newHeight, true);
+            Bitmap bmOverlay = Bitmap.createBitmap(scaledSelectedPhoto.getWidth(),
+                    scaledSelectedPhoto.getHeight(), scaledSelectedPhoto.getConfig());
+            Canvas canvas = new Canvas();
+            canvas.setBitmap(bmOverlay);
+            canvas.drawBitmap(scaledSelectedPhoto, new Matrix(), null);
+            canvas.drawBitmap(overlayBitmap, new Matrix(), null);
+            canvas.save();
+            return bmOverlay;
+        }
     }
 
     private Bitmap imageViewToBitmap(ImageView imageView) {
