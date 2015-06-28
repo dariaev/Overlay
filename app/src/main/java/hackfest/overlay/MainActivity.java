@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -221,10 +222,12 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         // Create a New Class called "ImageUpload" in Parse
         ParseObject imgupload = new ParseObject("Overlay");
 
+        ParseGeoPoint currentLocation = new ParseGeoPoint(lastLat, lastLong);
         // Create a column named "ImageName" and set the string
         imgupload.put("Overlay", path);
         imgupload.put("Latitude", lastLat);
         imgupload.put("Longitude", lastLong);
+        imgupload.put("CurrentGeoPoint", currentLocation);
         imgupload.put("UseCount", 0);
         imgupload.put("TryCount", 0);
         imgupload.put("Time", time);
