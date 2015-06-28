@@ -32,4 +32,8 @@ public class FriendsActivity extends ListActivity {
         MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this, values);
         setListAdapter(adapter);
     }
+
+    public void backToChoose(View v){
+        super.onBackPressed();
+    }
 }
