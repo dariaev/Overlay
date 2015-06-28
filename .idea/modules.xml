@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Overlay.iml" filepath="$PROJECT_DIR$/Overlay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/src/main/res/libs/BottomSheet/example/exampleBottomSheet.iml" filepath="$PROJECT_DIR$/app/src/main/res/libs/BottomSheet/example/exampleBottomSheet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/src/main/res/libs/BottomSheet/library/library.iml" filepath="$PROJECT_DIR$/app/src/main/res/libs/BottomSheet/library/library.iml" />
     </modules>
   </component>
 </project>

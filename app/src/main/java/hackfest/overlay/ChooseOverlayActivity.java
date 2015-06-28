@@ -283,7 +283,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 String s = "URL"+i;
                 JSONObject wtf= (JSONObject) resultsArray.get(i);
                 b.putString(s, wtf.getString("tbUrl"));
-                Log.v("message", "sent another one  " + s + wtf.getString("tbUrl"));
+                s = "fullResURL"+i;
+                b.putString(s, wtf.getString("url"));
+                Log.v("message", "sent another one  " + s + wtf.getString("url"));
             }
             b.putInt("Total", resultsArray.length());
             msgObj.setData(b);
@@ -309,18 +311,18 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     public static class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
 
-        public DownloadImageTask() {
+        private String mURL="";
+        public DownloadImageTask(String fullUrl) {
+            mURL=fullUrl;
         }
 
         protected Drawable doInBackground(String... urls) {
-            String urldisplay = urls[0];
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
+                InputStream in = new java.net.URL(mURL).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+                Log.e("Error", e.toString() + mURL);
             }
             Drawable d = new BitmapDrawable(thisAct.getResources(), mIcon11);
 
@@ -343,7 +345,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
                     try {
-                        Drawable d = new DownloadImageTask()
+                        Drawable d = new DownloadImageTask(message.getData().get("URL"+i).toString())
                                 .execute(message.getData().get("URL"+i).toString()).get();
                         SearchViewPopup.getMenu().getItem(i).setIcon(d);
                     }
@@ -361,14 +363,62 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
             @Override
-            public void handleMessage(Message message) {
+            public void handleMessage(final Message message) {
                 // This is where you do your work in the UI thread.
                 // Your worker tells you in the message what to do.
+                Log.v("Angie", "total " + message.getData().getInt("Total"));
+                final String s1= message.getData().getString("fullResURL0");
+                Log.v("Angie", "first link" + s1);
+                final String s2= message.getData().getString("fullResURL1");
+                Log.v("Angie", "first link" + s2);
+                final String s3= message.getData().getString("fullResURL2");
+                Log.v("Angie", "first link" + s3);
+                final String s4= message.getData().getString("fullResURL3");
+                Log.v("Angie", "first link" + s4);
+                final String s5= message.getData().getString("fullResURL4");
+                Log.v("Angie", "first link" + s5);
+                final String s6= message.getData().getString("fullResURL5");
+                Log.v("Angie", "first link" + s6);
+
                 BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
-                            case R.id.Facebook:
+                            case R.id.Img1:
+                                try {
+                                    Drawable d = new DownloadImageTask(s1).execute(s1).get();
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img2:
+                                try {
+                                    Drawable d = new DownloadImageTask(s2).execute(s2).get();
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img3:
+                                try {
+                                    Drawable d = new DownloadImageTask(s3).execute(s3).get();
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img4:
+                                try {
+                                    Drawable d = new DownloadImageTask(s4).execute(s4).get();
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img5:
+                                try {
+                                    Drawable d = new DownloadImageTask(s5).execute(s5).get();
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img6:
+                                try {
+                                    Drawable d = new DownloadImageTask(s6).execute(s6).get();
+                                } catch (Exception e) {
+                                }
                                 break;
                             default:
                                 break;
@@ -382,7 +432,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 for (int i=0; i<message.getData().getInt("Total"); i++) {
                     Log.v("Angie", "messagehandler" + message.getData().get("URL" + i));
                     try {
-                        Drawable d = new DownloadImageTask()
+                        Drawable d = new DownloadImageTask(message.getData().get("URL"+i).toString())
                                 .execute(message.getData().get("URL"+i).toString()).get();
                         share.getMenu().getItem(i).setIcon(d);
                     }
@@ -445,18 +495,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         }
                         tweetIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                         startActivity(tweetIntent);
-
                         break;
                     case R.id.Facebook:
-                        /*
-                        Intent intent1 = new Intent(Intent.ACTION_SEND);
-                        intent1.setClassName("com.facebook.katana", "com.facebook.katana.activity.composer.ImplicitShareIntentHandler");
-                        intent1.setAction("android.intent.action.SEND");
-                        intent1.setType("text/plain");
-                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
-                        intent1.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                        startActivity(intent1);*/
-
                         break;
                     case R.id.Instagram:
                         // Create the new Intent using the 'Send' action.
