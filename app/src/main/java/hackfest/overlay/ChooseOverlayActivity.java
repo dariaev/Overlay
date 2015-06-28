@@ -133,6 +133,11 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         right = "Trending";
     }
 
+    public void backClicked(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     public void midClick(View v){
         TextView tv = (TextView) v;
         if (((TextView) v).getText().equals("Search")){
