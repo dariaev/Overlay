@@ -519,7 +519,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             Canvas canvas = new Canvas();
             canvas.setBitmap(bmOverlay);
             canvas.drawBitmap(scaledSelectedPhoto, new Matrix(), null);
-            canvas.drawBitmap(overlayBitmap, (float)(newWidth * 0.2), (float)0, null);
+            canvas.drawBitmap(overlayBitmap, new Matrix(), null);
             canvas.save();
             return bmOverlay;
         }
