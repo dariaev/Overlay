@@ -21,6 +21,14 @@
             android:layout_gravity="center"
             android:src="@drawable/greylock_sample"/>
 
+
+        <ImageView
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -73,13 +81,6 @@
                 android:layout_weight=".6"
                 android:padding="8dp">
 
-                <ImageView
-                    android:id="@+id/overlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:padding="5dp"
-                    android:adjustViewBounds="true"/>
             </FrameLayout>
 
             <LinearLayout
