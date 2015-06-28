@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,6 +35,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -82,9 +84,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().hide();
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
 
         locationListener = new MyLocLis();
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -103,6 +102,17 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
                 Toast.makeText(getApplicationContext(), "Picture Saved", Toast.LENGTH_LONG).show();
             }
         };
+    }
+
+    public void ParseUploadOverlay() {
+        String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/ed.png";
+        String title="EdwardCullen";
+        byte[] image = null;
+        image=("hello").getBytes();
+        ParseFile file = new ParseFile(title, image);
+        ParseObject imgupload = new ParseObject("Overlay");
+        imgupload.put("ImageFile", file);
+        imgupload.saveInBackground();
     }
     private class MyLocLis implements LocationListener {
 
