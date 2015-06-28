@@ -28,9 +28,7 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.label);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-        textView.setText(values[position]);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.personalInfo).findViewById(R.id.icon);
         // change the icon for Windows and iPhone
         String s = values[position];
         if (s.startsWith("iPhone")) {

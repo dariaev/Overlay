@@ -8,4 +8,5 @@
     <color name="white">#FFFFFF</color>
 
     <string name="title_activity_choose_overlay">ChooseOverlayActivity</string>
+    <string name="title_activity_friends">FriendsActivity</string>
 </resources>

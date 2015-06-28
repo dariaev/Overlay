@@ -110,6 +110,7 @@
                     android:src="@drawable/ic_file_upload_black_24dp"
                     android:gravity="center_horizontal"
                     android:layout_gravity="center"
+                    android:onClick="FriendsView"
                     />
 
 

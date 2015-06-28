@@ -269,7 +269,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
                         ((OverlayApp)getApplication()).setFlag(false);
                         Intent intent = new Intent(this, ChooseOverlayActivity.class);
                         startActivity(intent);
-                        Log.v("Yeezy", "NorthWest");
                     }
                     catch (Exception e) {
                     }

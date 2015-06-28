@@ -25,7 +25,7 @@ public class FriendsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
         //getSupportActionBar().hide();
-        mListView = (ListView) findViewById(R.id.listview);
+        mListView = (ListView) findViewById(android.R.id.list);
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2" };

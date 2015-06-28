@@ -124,7 +124,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(),
                 scaledBitmap.getHeight(), matrix, true);
         mSelectedPhoto.setImageBitmap(rotatedBitmap);
-        getAllOverlays();
         lastWasPrev = false;
         getTopNByLocation(10,((OverlayApp)getApplication()).lastLong,((OverlayApp)getApplication()).lastLat);
         previouslySelected = null;
@@ -132,6 +131,11 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         left = "Search";
         mid = "Location";
         right = "Trending";
+    }
+
+    public void FriendsView(View view) {
+        Intent intent = new Intent(this, FriendsActivity.class);
+        startActivity(intent);
     }
 
     public void backClicked(View v) {
