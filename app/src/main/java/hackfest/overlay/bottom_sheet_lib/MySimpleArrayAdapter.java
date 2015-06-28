@@ -36,22 +36,22 @@ public class MySimpleArrayAdapter extends ArrayAdapter<String> {
         String s = values[position];
         if (position==0) {
             imageView.setImageResource(R.drawable.angie_head_circle);
-            bigpic.setImageResource(R.drawable.angie_head_circle);
+            bigpic.setImageResource(R.drawable.sample3);
             name.setText("Angie Sun");
             pts.setText("51 points");
         } else if (position==1) {
-            imageView.setImageResource(R.drawable.angie_head_circle);
-            bigpic.setImageResource(R.drawable.angie_head_circle);
+            imageView.setImageResource(R.drawable.daria_head_circle);
+            bigpic.setImageResource(R.drawable.sample2);
             name.setText("Daria Evdokimova");
             pts.setText("62 points");
         }else if (position==2){
-            imageView.setImageResource(R.drawable.angie_head_circle);
-            bigpic.setImageResource(R.drawable.angie_head_circle);
+            imageView.setImageResource(R.drawable.rohan_head_circle);
+            bigpic.setImageResource(R.drawable.sample4);
             name.setText("Rohan Das");
             pts.setText("900 points");
         }else if (position==3){
-            imageView.setImageResource(R.drawable.angie_head_circle);
-            bigpic.setImageResource(R.drawable.angie_head_circle);
+            imageView.setImageResource(R.drawable.noah_head_circle);
+            bigpic.setImageResource(R.drawable.sample1);
             name.setText("Noah Presler");
             pts.setText("100 points");
         }else if (position==4){

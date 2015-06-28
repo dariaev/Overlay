@@ -27,9 +27,12 @@ public class FriendsActivity extends ListActivity {
         //getSupportActionBar().hide();
         mListView = (ListView) findViewById(android.R.id.list);
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2" };
+                "Blackberry", "WebOS"};
         MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(this, values);
         setListAdapter(adapter);
+    }
+
+    public void backToChoose(View v){
+        super.onBackPressed();
     }
 }
