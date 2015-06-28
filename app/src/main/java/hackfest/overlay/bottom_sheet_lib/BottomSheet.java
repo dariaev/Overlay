@@ -38,8 +38,10 @@ import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,8 +52,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,6 +65,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import hackfest.overlay.ChooseOverlayActivity;
 import hackfest.overlay.R;
 
 
@@ -536,6 +541,20 @@ public class BottomSheet extends Dialog implements DialogInterface {
         });
     }
 
+    public void hideSearchBar(boolean hide) {
+        LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
+        if (hide==true) {
+            e.findViewById(R.id.searchenter).setVisibility(View.GONE);
+        }
+        else {
+            e.findViewById(R.id.searchenter).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public String getSearchQueryText() {
+        LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
+        return ((EditText)e.findViewById(R.id.searchenter)).getText().toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -562,8 +581,28 @@ public class BottomSheet extends Dialog implements DialogInterface {
             }
         });
         getWindow().setAttributes(params);
+
+        LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
+        EditText ed = (EditText) e.findViewById(R.id.searchenter);
+        ed.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    performSearch();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
+
+    public void performSearch() {
+        LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
+        EditText ed = (EditText) e.findViewById(R.id.searchenter);
+        ChooseOverlayActivity.ShowSearchSlider(ed.getText().toString());
+        Log.v("Angie", "angie implement perform search yo! ");
+    }
     @SuppressWarnings("SameParameterValue")
     @TargetApi(19)
     private void setTranslucentStatus(boolean on) {

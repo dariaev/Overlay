@@ -98,13 +98,14 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private String mid;
     private String right;
     private int scrollIdx;
-    public Activity thisAct = this;
-    public Handler mHandler;
+    public static Activity thisAct = null;
+    public static Handler mHandler;
     public BottomSheet SearchViewPopup = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        thisAct=this;
         setContentView(R.layout.activity_choose_overlay);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         ButterKnife.inject(this);
@@ -169,7 +170,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         } else if (mid.equals("Location")){
             getTopNByLocation(10,((OverlayApp)getApplication()).lastLong,((OverlayApp)getApplication()).lastLat);
         } else {
-            ShowSearchSlider(null);
+            ShowSearchSlider("Swiper");
         }
     }
 
@@ -238,20 +239,23 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
-    class SearchQueryTask extends AsyncTask<String, Void, Integer> {
+    public static class SearchQueryTask extends AsyncTask<String, Void, Integer> {
 
         private Exception exception;
         public Activity mActivity;
-
-        public SearchQueryTask(Activity activity) {
+        public String mQuery;
+        public SearchQueryTask(Activity activity, String query) {
             mActivity=activity;
+            mQuery=query;
         }
     protected Integer doInBackground(String... queryString) {
         URL url = null;
         URLConnection connection=null;
+        String tempQueryString="barack%20obama";
+        Log.v("Angie", "query string is " + mQuery);
         try {
             url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
-                    "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&rsz=4");
+                    "v=1.0&q="+mQuery+"&as_filetype=png&imgc=trans&rsz=4");
             connection = url.openConnection();
             String line;
             StringBuilder builder = new StringBuilder();
@@ -271,8 +275,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             {
                 String s = "URL"+i;
                 JSONObject wtf= (JSONObject) resultsArray.get(i);
-                b.putString(s, wtf.getString("url"));
-                Log.v("message", "sent another one  " + s + wtf.getString("url"));
+                b.putString(s, wtf.getString("tbUrl"));
+                Log.v("message", "sent another one  " + s + wtf.getString("tbUrl"));
             }
             b.putInt("Total", resultsArray.length());
             msgObj.setData(b);
@@ -296,7 +300,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     }
 }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
+    public static class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
 
         public DownloadImageTask() {
         }
@@ -311,7 +315,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             }
-            Drawable d = new BitmapDrawable(getResources(), mIcon11);
+            Drawable d = new BitmapDrawable(thisAct.getResources(), mIcon11);
 
             return d;
         }
@@ -320,8 +324,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
-    public void ShowSearchSlider(View view) {
-        new SearchQueryTask(this).execute("gello");
+    public static void ShowSearchSlider(String queryText) {
+        new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -431,6 +435,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 }
             }
         }).build();
+        share.hideSearchBar(true);
 
         share.show();
 /*
