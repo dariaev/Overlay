@@ -1,5 +1,8 @@
 package hackfest.overlay;
 
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +14,12 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.ActionMenuItem;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -32,10 +40,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 
-import com.cocosw.bottomsheet.BottomSheet;
 import com.parse.FindCallback;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -47,6 +55,14 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.List;
@@ -57,6 +73,7 @@ import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import hackfest.overlay.bottom_sheet_lib.BottomSheet;
 
 
 public class ChooseOverlayActivity extends ActionBarActivity {
@@ -81,6 +98,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     private String mid;
     private String right;
     private int scrollIdx;
+    public Activity thisAct = this;
+    public Handler mHandler;
+    public BottomSheet SearchViewPopup = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +168,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             getTopNTrending(10);
         } else if (mid.equals("Location")){
             getTopNByLocation(10,((OverlayApp)getApplication()).lastLong,((OverlayApp)getApplication()).lastLat);
+        } else {
+            ShowSearchSlider(null);
         }
     }
 
@@ -216,6 +238,136 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
     }
 
+    class SearchQueryTask extends AsyncTask<String, Void, Integer> {
+
+        private Exception exception;
+        public Activity mActivity;
+
+        public SearchQueryTask(Activity activity) {
+            mActivity=activity;
+        }
+    protected Integer doInBackground(String... queryString) {
+        URL url = null;
+        URLConnection connection=null;
+        try {
+            url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
+                    "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&rsz=4");
+            connection = url.openConnection();
+            String line;
+            StringBuilder builder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            while((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            JSONObject json = new JSONObject(builder.toString());
+            Log.v("AngieJSON", json.toString());
+            JSONObject responseData= (JSONObject) json.get("responseData");
+            Log.v("AngieJSON2", responseData.toString());
+            JSONArray resultsArray= (JSONArray) responseData.get("results");
+            Log.v("AngieJSON3", resultsArray.toString());
+            Message msgObj = mHandler.obtainMessage();
+            Bundle b = new Bundle();
+            for (int i=0 ;i<resultsArray.length(); i++)
+            {
+                String s = "URL"+i;
+                JSONObject wtf= (JSONObject) resultsArray.get(i);
+                b.putString(s, wtf.getString("url"));
+                Log.v("message", "sent another one  " + s + wtf.getString("url"));
+            }
+            b.putInt("Total", resultsArray.length());
+            msgObj.setData(b);
+            mHandler.sendMessage(msgObj);
+            //Log.v("AngieJSON4", responseData.get("GsearchResultClass").toString());
+        }
+        catch(Exception e) {
+            Log.v("AngieJSON", "Exception");
+            Log.v("AngieJSon", e.toString() + e.getStackTrace().toString());
+            e.printStackTrace();
+        }
+
+         //   url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
+        //            "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&start=4");
+
+
+        return (Integer)3;
+    }
+
+    protected void onPostExecute(Integer integer) {
+    }
+}
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
+
+        public DownloadImageTask() {
+        }
+
+        protected Drawable doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            Drawable d = new BitmapDrawable(getResources(), mIcon11);
+
+            return d;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+        }
+    }
+
+    public void ShowSearchSlider(View view) {
+        new SearchQueryTask(this).execute("gello");
+         mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                // This is where you do your work in the UI thread.
+                // Your worker tells you in the message what to do.
+                Log.v("Angie", "message" + message.getData().get("URL") + "   " + message.getData().getInt("Total"));
+
+                BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case R.id.Facebook:
+                                break;
+                        }
+                    }
+                }).build();
+                share.show();
+                // Associate searchable configuration with the SearchView
+//                SearchManager searchManager =
+//                        (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+//                SearchView searchView =
+//                        (SearchView) share.getMenu().getItem(0) ;
+//                searchView.setSearchableInfo(
+//                        searchManager.getSearchableInfo(getComponentName()));
+
+                for (int i=0; i<message.getData().getInt("Total"); i++) {
+                    Log.v("Angie", "messagehandler" + message.getData().get("URL" + i));
+                    try {
+                        Drawable d = new DownloadImageTask()
+                                .execute(message.getData().get("URL"+i).toString()).get();
+                        share.getMenu().getItem(i+1).setIcon(d);
+                    }
+                    catch(Exception e) {
+
+                    }
+                }
+
+
+
+                removeMessages(0);
+                //message.
+            }
+        };
+
+    }
+
 
 
     public void ShareViaEmail(View view) {
@@ -228,9 +380,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 Uri screenshotUri = Uri.parse(path);
 
                 switch (which) {
-                    case R.id.help:
-                        //q.toast("Help me!");
-                        break;
                     case R.id.Download:
                         saveOverlayedImage(overlayedBitmap);
                         Toast.makeText(ChooseOverlayActivity.this, "Your image is saving", Toast.LENGTH_LONG).show();
@@ -270,17 +419,14 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
                         break;
                     case R.id.Facebook:
-                        try {
-                            Intent intent1 = new Intent();
-                            intent1.setClassName("com.facebook.katana", "com.facebook.katana.activity.composer.ImplicitShareIntentHandler");
-                            intent1.setAction("android.intent.action.SEND");
-                            intent1.setType("text/plain");
-                            intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
-                            intent1.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                            startActivity(intent1);
-                        } catch (Exception e) {
-                            // If we failed (not native FB app installed), try share through SEND
-                        }
+                        Intent intent1 = new Intent();
+                        intent1.setClassName("com.facebook.katana", "com.facebook.katana.activity.composer.ImplicitShareIntentHandler");
+                        intent1.setAction("android.intent.action.SEND");
+                        intent1.setType("text/plain");
+                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        intent1.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        startActivity(intent1);
+
                         break;
                 }
             }

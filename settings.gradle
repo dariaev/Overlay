@@ -1,1 +1,3 @@
-include ':app'
+include ':app', ':library', ':exampleBottomSheet'
+project(':library').projectDir = new File('app/src/main/res/libs/BottomSheet/library')
+project(':exampleBottomSheet').projectDir = new File('app/src/main/res/libs/BottomSheet/example')
