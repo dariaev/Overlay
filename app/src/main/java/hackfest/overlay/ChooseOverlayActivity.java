@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
@@ -84,7 +85,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
     @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
     @InjectView(R.id.horizontalScrollView) HorizontalScrollView scrollView;
+    @InjectView(R.id.upload) ImageView uploadView;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
+    private Bitmap overlayBitmap;
     final ArrayList<Overlay> topNlocation = new ArrayList<Overlay>();
     final ArrayList<Overlay> trending = new ArrayList<Overlay>();
     private SlidingUpPanelLayout SlidePanel = null;
@@ -108,19 +111,18 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         thisAct=this;
         setContentView(R.layout.activity_choose_overlay);
-        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         ButterKnife.inject(this);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
-
+        overlayBitmap = imageViewToBitmap(mOverlayPng);
         byte[] input = ((OverlayApp) getApplication()).getImage();
         // input bitmap is off by 90 degrees
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(input, 0, input.length);
         Matrix matrix = new Matrix();
-        if (((OverlayApp)getApplication()).getFlag() == true) {
+        if (((OverlayApp)getApplication()).getFlag()) {
             matrix.postRotate(90);
         }
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(imageBitmap,imageBitmap.getWidth(),
-                imageBitmap.getHeight(),true);
+                imageBitmap.getHeight(), true);
         Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap.getWidth(),
                 scaledBitmap.getHeight(), matrix, true);
         mSelectedPhoto.setImageBitmap(rotatedBitmap);
@@ -131,7 +133,10 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         left = "Search";
         mid = "Location";
         right = "Trending";
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
     }
+
 
     public void FriendsView(View view) {
         Intent intent = new Intent(this, FriendsActivity.class);
@@ -148,6 +153,11 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         if (((TextView) v).getText().equals("Search")){
             ShowSearchSlider(null);
         }
+    }
+
+    public void moveOverlay(View v) {
+        // follow the cursor
+        mDetector.setIsLongpressEnabled(true);
     }
 
     public void topNavClicked(View v) {
@@ -206,8 +216,8 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         private static final String DEBUG_TAG = "Gestures";
 
         @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent event1, MotionEvent event2, float velocityX,
+                               float velocityY) {
             int scrollIdx = -1;
             Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
             if(velocityX > 0) {
@@ -566,7 +576,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             Toast.makeText(this, "Select an overlay", Toast.LENGTH_LONG).show();
             return null;
         } else {
-            Bitmap overlayBitmap = ((BitmapDrawable) overlay.getDrawable()).getBitmap();
+            overlayBitmap = ((BitmapDrawable) overlay.getDrawable()).getBitmap();
             Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
             float aspectRatio = selectedPhotoBitmap.getWidth() / (float) selectedPhotoBitmap.getHeight();
             int newWidth = (int) 1.4 * overlayBitmap.getWidth();
@@ -605,7 +615,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         imageView.setImageResource(image);
         return imageView;
     }
-
 
     //possible that this will return an empty list
     // Noah
