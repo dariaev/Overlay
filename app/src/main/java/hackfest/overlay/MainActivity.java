@@ -1,18 +1,18 @@
 package hackfest.overlay;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,8 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 
 import java.io.BufferedInputStream;
@@ -38,13 +36,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-
-import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
-
-import java.io.FileOutputStream;
 
 public class MainActivity extends ActionBarActivity implements SurfaceHolder.Callback {
 
@@ -54,17 +46,12 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     private LocationListener locationListener;
-    public static String photoExtra = "PHOTO_EXTRA";
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
-    byte[] img;
     Camera mCamera;
     private PictureCallback mPicture;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
 
-    Camera.PictureCallback rawCallback;
-    Camera.ShutterCallback shutterCallback;
     Camera.PictureCallback jpegCallback;
 
     @Override
@@ -102,16 +89,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         jpegCallback = new PictureCallback() {
             @Override
             public void onPictureTaken(byte[] data, Camera camera) {
-                FileOutputStream outStream = null;
-
-//                    outStream = new FileOutputStream(String.format("/sdcard/%d.jpg", System.currentTimeMillis()));
-//
-//                    outStream.write(data);
-//                    outStream.close();
-//                img = data;
-
                 Toast.makeText(getApplicationContext(), "Picture Saved", Toast.LENGTH_LONG).show();
-                //refreshCamera();
             }
         };
     }
@@ -136,16 +114,12 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         public void onLocationChanged(Location location) {
             ((OverlayApp)getApplication()).lastLong = location.getLongitude();
             ((OverlayApp)getApplication()).lastLat = location.getLatitude();
-        };
+        }
     }
     public void openDrawer(View view) {
             mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
-    public void capturePhoto(View view){
-        Intent intent = new Intent(this, ChooseOverlayActivity.class);
-        startActivity(intent);
-    }
     private byte[] readInFile(String path) throws IOException {
         // TODO Auto-generated method stub
         byte[] data = null;
@@ -163,61 +137,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
     }
 
-    public void launchOtherAct(View view) {
-        Intent intent = new Intent(this, ChooseOverlayActivity.class);
-        startActivity(intent);
-    }
-    private void ParseUploadOverlay() {
-        //ParseObject testObject = new ParseObject("TestObject");
-        //testObject.put("foo", "bar");
-        //testObject.saveInBackground();
-
-        //get metadata first
-        Calendar c = Calendar.getInstance();
-        Long time = c.getTimeInMillis();
-
-        //get file path
-        String path= Environment.getExternalStorageDirectory()+"/DCIM/Camera/ed.png";
-
-        byte[] image = null;
-        try {
-            image = readInFile(path);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create the ParseFile
-        String title="EdwardCullen";
-        ParseFile file = new ParseFile(title, image);
-        // Upload the image into Parse Cloud
-        file.saveInBackground();
-
-        // Create a New Class called "ImageUpload" in Parse
-        ParseObject imgupload = new ParseObject("Overlay");
-
-        ParseGeoPoint currentLocation = new ParseGeoPoint(((OverlayApp)getApplication()).lastLat,((OverlayApp)getApplication()).lastLong);
-        // Create a column named "ImageName" and set the string
-        imgupload.put("Overlay", path);
-        imgupload.put("Latitude", ((OverlayApp)getApplication()).lastLat);
-        imgupload.put("Longitude", ((OverlayApp)getApplication()).lastLong);
-        imgupload.put("CurrentGeoPoint", currentLocation);
-        imgupload.put("UseCount", 0);
-        imgupload.put("TryCount", 0);
-        imgupload.put("Time", time);
-        imgupload.put("Tag1", "");
-        imgupload.put("Tag2", "");
-        imgupload.put("Tag3", "");
-        imgupload.put("Tag4", "");
-        imgupload.put("Tag5", "");
-
-        // Create a column named "ImageFile" and insert the image
-        imgupload.put("ImageFile", file);
-
-        // Create the class and the columns
-        imgupload.saveInBackground();
-
-    }
 
     private void addDrawerItems() {
         String[] osArray = { "Android", "iOS", "Windows", "OS X", "Linux" };
@@ -372,21 +291,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
         super.onDestroy();
     }
 
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
