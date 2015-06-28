@@ -68,7 +68,7 @@ android:layout_height="match_parent">
         android:layout_height="match_parent"
         android:layout_gravity="left"
         android:orientation="vertical"
-        >
+        android:background="@color/midnight_blue">
         <LinearLayout
             android:id="@+id/PersonalProfile"
             android:layout_width="300dp"
@@ -83,23 +83,37 @@ android:layout_height="match_parent">
             <LinearLayout
                 android:id="@+id/PersonalText"
                 android:layout_width="150dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="5dp"
                 android:layout_height="150dp"
                 android:layout_gravity="left"
                 android:orientation="vertical">
                 <TextView
+                    android:paddingTop="5dp"
+                    android:textAlignment="center"
                     android:layout_width="300dp"
-                    android:layout_height="30dp"
-                    android:text="sunangel"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:text="Angel Sun"
                     />
                 <TextView
                     android:layout_width="300dp"
                     android:layout_height="30dp"
-                    android:text="Your points"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey_white"
+                    android:text="YOUR KARMA:"
+                    android:textSize="20dp"
                     />
                 <TextView
                     android:layout_width="300dp"
                     android:layout_height="30dp"
-                    android:text="1,000"
+                    android:textAlignment="center"
+                    android:textColor="@color/grey_white"
+                    android:text="1,000,000"
+                    android:textSize="15dp"
                     />
             </LinearLayout>
         </LinearLayout>
