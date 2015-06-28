@@ -32,6 +32,7 @@ public class Overlay {
 
     public Overlay(ParseObject obj) {
         ParseFile parseFile= obj.getParseFile("ImageFile");
+        Title=parseFile.getName();
         try {
             imageArray = parseFile.getData();
         }catch (Exception e) {

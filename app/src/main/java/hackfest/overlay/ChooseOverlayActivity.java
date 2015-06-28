@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.parse.FindCallback;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -46,6 +47,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         // this image view doesn't do anything right now
         ImageView testImage = new ImageView(this);
         testImage.setImageBitmap(bmOverlay); */
+        getTopNByLocation(3, -122.416, 37.777);
     }
 
     private void populateGallery() {
@@ -64,6 +66,45 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         return imageView;
     }
 
+    //possible that this will return an empty list
+    // Noah
+    public ArrayList<Overlay> getTopNByLocation(final int n, double longitude, double latitude) {
+        final ArrayList<Overlay> topN = new ArrayList<Overlay>();
+        ParseQuery query = new ParseQuery("Overlay");
+
+        // by location temporarily looks for the top most popular iwthin a "30 mile radius"
+        ParseGeoPoint searchQueryPoint = new ParseGeoPoint(latitude, longitude);
+        query.whereWithinMiles("CurrentGeoPoint", searchQueryPoint,50);
+
+        query.findInBackground(new FindCallback() {
+            @Override
+            public void done(List list, com.parse.ParseException e) {
+                if (e == null) {
+
+                    String myObject = list.toString();
+                    Log.d("Angie", "Retrieved " + myObject + " Brands");
+
+                } else {
+                    Log.d("Angie", "Error: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void done(Object o, Throwable throwable) {
+                List<ParseObject> list = (List<ParseObject>) o;
+                for (int i = 0; i < n && i < list.size(); i++) {
+                    ParseObject object = (ParseObject) list.get(i);
+                    Overlay overlay = new Overlay(object);
+                    topN.add(overlay);
+                }
+
+            }
+        });
+        return topN;
+
+    }
+
+    //possible that this will return an empty list
     public ArrayList<Overlay> getAllOverlays() {
         final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
         ParseQuery query = new ParseQuery("Overlay");
