@@ -421,13 +421,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                         sendIntent.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");
                         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
                         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Check out my Swiper photo!");
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         sendIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
                         startActivity(sendIntent);
                         break;
                     case R.id.Twitter:
                         Intent tweetIntent = new Intent(Intent.ACTION_SEND);
-                        tweetIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        tweetIntent.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         tweetIntent.setType("text/plain");
 
                         PackageManager packManager = getPackageManager();
@@ -448,21 +448,36 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
                         break;
                     case R.id.Facebook:
-                        Intent intent1 = new Intent();
+                        /*
+                        Intent intent1 = new Intent(Intent.ACTION_SEND);
                         intent1.setClassName("com.facebook.katana", "com.facebook.katana.activity.composer.ImplicitShareIntentHandler");
                         intent1.setAction("android.intent.action.SEND");
                         intent1.setType("text/plain");
-                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took in Swiper!");
+                        intent1.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
                         intent1.putExtra(Intent.EXTRA_STREAM, screenshotUri);
-                        startActivity(intent1);
+                        startActivity(intent1);*/
 
+                        break;
+                    case R.id.Instagram:
+                        // Create the new Intent using the 'Send' action.
+                        Intent share = new Intent(Intent.ACTION_SEND);
+
+                        // Set the MIME type
+                        share.setType("text/plain");
+                        share.setPackage("com.instagram.android");
+
+                        // Add the URI and the caption to the Intent.
+                        share.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+                        share.putExtra(Intent.EXTRA_TEXT, "Check out this photo I took with Swiper!");
+
+                        // Broadcast the Intent.
+                        startActivity(Intent.createChooser(share, "Share to"));
                         break;
                 }
             }
         }).build();
-        //share.hideSearchBar(true);
-
         share.show();
+        share.hideSearchBar(true);
     }
     private void saveOverlayedImage(Bitmap bmOverlay) {
         // processes two images, merges them and saves the result
