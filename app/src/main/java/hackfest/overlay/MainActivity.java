@@ -3,6 +3,11 @@ package hackfest.overlay;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.location.Location;
@@ -23,11 +28,14 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +44,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements SurfaceHolder.Callback {
 
@@ -48,6 +58,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private LocationListener locationListener;
     private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
     Camera mCamera;
+    final ArrayList<Overlay> allOverlays = new ArrayList<Overlay>();
     private PictureCallback mPicture;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
@@ -259,7 +270,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
             }
         }
     }
-
 
 
     public void captureImage(View v) throws IOException {
