@@ -3,4 +3,5 @@
     <color name="midnight_blue">#2c3e50</color>
     <color name="bs_divider_color">#1f000000</color>
     <color name="bs_dark_divider_color">#1fffffff</color>
+    <color name="grey_white">#95a5a6</color>
 </resources>
