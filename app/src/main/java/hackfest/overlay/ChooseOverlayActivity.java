@@ -458,7 +458,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
         Bitmap overlayBitmap = ((BitmapDrawable)overlay.getDrawable()).getBitmap();
         Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
-                selectedPhoto.getHeight(), true);
+                overlayBitmap.getHeight() * selectedPhoto.getWidth() / overlayBitmap.getWidth(), true);
 
         Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
                 selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
