@@ -38,7 +38,6 @@ import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -87,7 +86,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
     private int mStatusBarHeight;
     private GridView list;
     private SimpleSectionedGridAdapter adapter;
-    private Builder builder;
+    public Builder builder;
 
     private final SparseIntArray hidden = new SparseIntArray();
 
@@ -447,8 +446,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
                     if (builder.menulistener != null) {
                         builder.menulistener.onMenuItemClick((MenuItem) adapter.getItem(position));
                     }
-                    else if (builder.listener != null) {
-                        builder.listener.onClick(BottomSheet.this, ((MenuItem) adapter.getItem(position)).getItemId());
+                    else if (builder.angielistener != null) {
+                        builder.angielistener.onClick(BottomSheet.this, ((MenuItem) adapter.getItem(position)).getItemId());
                         ((MenuItem) adapter.getItem(position)).setChecked(true);
                         ((MenuItem) adapter.getItem(position)).setEnabled(false);
                     }
@@ -606,7 +605,8 @@ public class BottomSheet extends Dialog implements DialogInterface {
     public void performSearch() {
         LinearLayout e = (LinearLayout) findViewById(R.id.innerlayout);
         EditText ed = (EditText) e.findViewById(R.id.searchenter);
-        ChooseOverlayActivity.updateSearchSlider(ed.getText().toString());
+        ChooseOverlayActivity.updateSlider2(ed.getText().toString());
+        //ChooseOverlayActivity.ShowSearchSlider(ed.getText().toString());
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -655,7 +655,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
         private final ActionMenu menu;
         private CharSequence title;
         private boolean grid;
-        private OnClickListener listener;
+        public OnClickListener angielistener;
         private OnDismissListener dismissListener;
         private Drawable icon;
         private int limit = -1;
@@ -807,7 +807,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
          * @return This Builder object to allow for chaining of calls to set methods
          */
         public Builder listener(@NonNull OnClickListener listener) {
-            this.listener = listener;
+            this.angielistener = listener;
             return this;
         }
 

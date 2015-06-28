@@ -120,7 +120,7 @@ public class NativeAdTemplateActivity extends Activity implements AdListener {
         // Use different ID for each ad placement in your app.
         nativeAd = new NativeAd(NativeAdTemplateActivity.this, "YOUR_PLACEMENT_ID");
 
-        // Set a listener to get notified when the ad was loaded.
+        // Set a angielistener to get notified when the ad was loaded.
         nativeAd.setAdListener(NativeAdTemplateActivity.this);
 
         // Initiate a request to load an ad.

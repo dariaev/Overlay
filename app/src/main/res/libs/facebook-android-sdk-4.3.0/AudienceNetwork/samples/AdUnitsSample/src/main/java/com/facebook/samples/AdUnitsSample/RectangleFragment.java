@@ -51,7 +51,7 @@ public class RectangleFragment extends Fragment implements AdListener {
 
         adViewRectangle = new AdView(this.getActivity(), "YOUR_PLACEMENT_ID", AdSize.RECTANGLE_HEIGHT_250);
 
-        // Set a listener to get notified on changes or when the user interact with the ad.
+        // Set a angielistener to get notified on changes or when the user interact with the ad.
         adViewRectangle.setAdListener(this);
 
         // Initiate a request to load an ad.

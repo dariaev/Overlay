@@ -436,7 +436,7 @@ class GraphObjectAdapter extends BaseAdapter implements SectionIndexer {
 
 
     private boolean shouldShowActivityCircleCell() {
-        // We show the "more data" activity circle cell if we have a listener to request more data,
+        // We show the "more data" activity circle cell if we have a angielistener to request more data,
         // we are expecting more data, and we have some data already (i.e., not on a fresh query).
         return (cursor != null) && cursor.areMoreObjectsAvailable() && (dataNeededListener != null) && !isEmpty();
     }

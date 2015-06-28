@@ -164,7 +164,7 @@ public abstract class PickerFragment extends Fragment {
         listView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // We don't actually do anything differently on long-clicks, but setting the listener
+                // We don't actually do anything differently on long-clicks, but setting the angielistener
                 // enables the selector transition that we have for visual consistency with the
                 // Facebook app's pickers.
                 return false;

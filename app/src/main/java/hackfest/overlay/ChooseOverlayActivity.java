@@ -315,18 +315,12 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             b.putInt("Total", resultsArray.length());
             msgObj.setData(b);
             mHandler.sendMessage(msgObj);
-            //Log.v("AngieJSON4", responseData.get("GsearchResultClass").toString());
         }
         catch(Exception e) {
             Log.v("AngieJSON", "Exception");
             Log.v("AngieJSon", e.toString() + e.getStackTrace().toString());
             e.printStackTrace();
         }
-
-         //   url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
-        //            "v=1.0&q=barack%20obama&as_filetype=png&imgc=trans&start=4");
-
-
         return 3;
     }
 
@@ -401,7 +395,111 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         };
     }
 
-    public static void ShowSearchSlider(String queryText) {
+    public static void updateSlider2(final String queryText) {
+        new SearchQueryTask(thisAct, queryText).execute(queryText);
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(final Message message) {
+                // This is where you do your work in the UI thread.
+                // Your worker tells you in the message what to do.
+                Log.v("Angie", "total " + message.getData().getInt("Total"));
+                URL1= message.getData().getString("fullResURL0");
+                //Log.v("Angie", "first link" + s1);
+                URL2= message.getData().getString("fullResURL1");
+                //Log.v("Angie", "first link" + s2);
+                URL3= message.getData().getString("fullResURL2");
+                //Log.v("Angie", "first link" + s3);
+                URL4= message.getData().getString("fullResURL3");
+                //Log.v("Angie", "first link" + s4);
+                URL5= message.getData().getString("fullResURL4");
+                //Log.v("Angie", "first link" + s5);
+                URL6= message.getData().getString("fullResURL5");
+                //Log.v("Angie", "first link" + s6);
+
+                BottomSheet share = new BottomSheet.Builder(thisAct).title(queryText).grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case R.id.Img1:
+                                try {
+                                    searchDrawable = new DownloadImageTask(URL1).execute(URL1).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img2:
+                                try {
+                                    searchDrawable = new DownloadImageTask(URL2).execute(URL2).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img3:
+                                try {
+                                    searchDrawable = new DownloadImageTask(URL3).execute(URL3).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img4:
+                                try {
+                                    Drawable d = new DownloadImageTask(URL4).execute(URL4).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img5:
+                                try {
+                                    searchDrawable = new DownloadImageTask(URL5).execute(URL5).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            case R.id.Img6:
+                                try {
+                                    searchDrawable = new DownloadImageTask(URL6).execute(URL6).get();
+                                    ImageView iv = (ImageView) thisAct.findViewById(R.id.overlay);
+                                    iv.setImageDrawable(searchDrawable);
+                                } catch (Exception e) {
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }).build();
+                share.dismissable=false;
+                share.show();
+                SearchViewPopup.hide();
+                SearchViewPopup=share;
+                // Associate searchable configuration with the SearchView
+
+                for (int i=0; i<message.getData().getInt("Total"); i++) {
+                    Log.v("Angie", "messagehandler" + message.getData().get("URL" + i));
+                    try {
+                        Drawable d = new DownloadImageTask(message.getData().get("URL"+i).toString())
+                                .execute(message.getData().get("URL"+i).toString()).get();
+                        share.getMenu().getItem(i).setIcon(d);
+                    }
+                    catch(Exception e) {
+
+                    }
+                }
+
+
+
+                removeMessages(0);
+                //message
+            }
+        };
+    }
+
+    public static void ShowSearchSlider(final String queryText) {
         new SearchQueryTask(thisAct, queryText).execute(queryText);
          mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -422,7 +520,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 URL6= message.getData().getString("fullResURL5");
                 //Log.v("Angie", "first link" + s6);
 
-                BottomSheet share = new BottomSheet.Builder(thisAct).title("Search").grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
+                BottomSheet share = new BottomSheet.Builder(thisAct).title(queryText).grid().sheet(R.menu.search_overlay).listener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {

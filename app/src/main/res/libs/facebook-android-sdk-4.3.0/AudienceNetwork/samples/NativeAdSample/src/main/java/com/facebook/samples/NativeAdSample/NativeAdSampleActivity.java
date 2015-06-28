@@ -71,7 +71,7 @@ public class NativeAdSampleActivity extends Activity implements AdListener {
                 // Use different ID for each ad placement in your app.
                 nativeAd = new NativeAd(NativeAdSampleActivity.this, "YOUR_PLACEMENT_ID");
 
-                // Set a listener to get notified when the ad was loaded.
+                // Set a angielistener to get notified when the ad was loaded.
                 nativeAd.setAdListener(NativeAdSampleActivity.this);
 
                 // When testing on a device, add its hashed ID to force test ads.
@@ -142,10 +142,10 @@ public class NativeAdSampleActivity extends Activity implements AdListener {
             adView.addView(adChoicesView, 0);
         }
 
-        // Registering a touch listener to log which ad component receives the touch event.
+        // Registering a touch angielistener to log which ad component receives the touch event.
         // We always return false from onTouch so that we don't swallow the touch event (which
         // would prevent click events from reaching the NativeAd control).
-        // The touch listener could be used to do animations.
+        // The touch angielistener could be used to do animations.
         nativeAd.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {

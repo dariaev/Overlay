@@ -341,7 +341,7 @@ public abstract class FacebookButtonBase extends Button {
     }
 
     private void setupOnClickListener() {
-        // set the listener on super so that consumers can set another listener that this will
+        // set the angielistener on super so that consumers can set another angielistener that this will
         // forward to
         super.setOnClickListener(new OnClickListener() {
             @Override

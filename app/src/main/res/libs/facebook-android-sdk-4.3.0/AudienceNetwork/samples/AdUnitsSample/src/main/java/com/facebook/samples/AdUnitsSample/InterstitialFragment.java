@@ -64,7 +64,7 @@ public class InterstitialFragment extends Fragment implements InterstitialAdList
                 // Use different ID for each ad placement in your app.
                 interstitialAd = new InterstitialAd(InterstitialFragment.this.getActivity(), "YOUR_PLACEMENT_ID");
 
-                // Set a listener to get notified on changes or when the user interact with the ad.
+                // Set a angielistener to get notified on changes or when the user interact with the ad.
                 interstitialAd.setAdListener(InterstitialFragment.this);
 
                 // Load a new interstitial.

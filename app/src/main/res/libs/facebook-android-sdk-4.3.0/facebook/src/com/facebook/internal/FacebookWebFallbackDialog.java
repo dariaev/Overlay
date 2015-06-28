@@ -103,8 +103,8 @@ public class FacebookWebFallbackDialog extends WebDialog {
     public void cancel() {
         WebView webView = getWebView();
 
-        // If the page hasn't loaded, or the listener is already called, then we can't interrupt
-        // this cancellation. Either the JS won't be ready to consume the event, or the listener
+        // If the page hasn't loaded, or the angielistener is already called, then we can't interrupt
+        // this cancellation. Either the JS won't be ready to consume the event, or the angielistener
         // has already processed a result.
         // So let's just handle this cancellation in the standard way.
         if (!isPageFinished()

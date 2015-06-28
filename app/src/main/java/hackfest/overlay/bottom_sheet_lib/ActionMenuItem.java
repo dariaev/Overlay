@@ -290,7 +290,7 @@ class ActionMenuItem implements SupportMenuItem {
 
     @Override
     public SupportMenuItem setSupportOnActionExpandListener(MenuItemCompat.OnActionExpandListener listener) {
-        // No need to save the listener; ActionMenuItem does not support collapsing items.
+        // No need to save the angielistener; ActionMenuItem does not support collapsing items.
         return this;
     }
 }

@@ -264,7 +264,7 @@ class LoginClient implements Parcelable {
         if (outcome.token != null && AccessToken.getCurrentAccessToken() != null) {
             validateSameFbidAndFinish(outcome);
         } else {
-            // We're done, just notify the listener.
+            // We're done, just notify the angielistener.
             complete(outcome);
         }
     }

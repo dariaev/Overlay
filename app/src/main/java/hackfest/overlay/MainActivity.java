@@ -13,6 +13,7 @@ import android.hardware.Camera.PictureCallback;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -283,6 +284,19 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
     public void captureImage(View v) throws IOException {
         mCamera.takePicture(null, null, mPicture);
+        final MediaPlayer mp = MediaPlayer.create(this, R.drawable.click);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.reset();
+                mp.release();
+                mp=null;
+            }
+
+        });
+        mp.start();
     }
 
     public void refreshCamera() {

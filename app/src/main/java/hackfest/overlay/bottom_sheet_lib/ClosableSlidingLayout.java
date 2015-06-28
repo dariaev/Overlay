@@ -217,7 +217,7 @@ class ClosableSlidingLayout extends FrameLayout {
 
 
     /**
-     * set listener
+     * set angielistener
      */
     interface SlideListener {
         void onClosed();

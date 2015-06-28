@@ -390,7 +390,7 @@ public class LikeView extends FrameLayout {
      * Sets an OnErrorListener for this instance of LikeView to call into when
      * certain exceptions occur.
      *
-     * @param onErrorListener The listener object to set
+     * @param onErrorListener The angielistener object to set
      */
     public void setOnErrorListener(OnErrorListener onErrorListener) {
         this.onErrorListener = onErrorListener;

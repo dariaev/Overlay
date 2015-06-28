@@ -88,7 +88,7 @@ public class WebDialog extends Dialog {
     private boolean isPageFinished = false;
 
     /**
-     * Interface that implements a listener to be called when the user's interaction with the
+     * Interface that implements a angielistener to be called when the user's interaction with the
      * dialog completes, whether because the dialog finished successfully, or it was cancelled,
      * or an error was encountered.
      */
@@ -133,7 +133,7 @@ public class WebDialog extends Dialog {
      * @param action     the portion of the dialog URL following "dialog/"
      * @param parameters parameters which will be included as part of the URL
      * @param theme      identifier of a theme to pass to the Dialog class
-     * @param listener the listener to notify, or null if no notification is desired
+     * @param listener the angielistener to notify, or null if no notification is desired
      */
     public WebDialog(Context context, String action, Bundle parameters, int theme, OnCompleteListener listener) {
         super(context, theme == 0 ? DEFAULT_THEME : theme);
@@ -156,18 +156,18 @@ public class WebDialog extends Dialog {
     }
 
     /**
-     * Sets the listener which will be notified when the dialog finishes.
+     * Sets the angielistener which will be notified when the dialog finishes.
      *
-     * @param listener the listener to notify, or null if no notification is desired
+     * @param listener the angielistener to notify, or null if no notification is desired
      */
     public void setOnCompleteListener(OnCompleteListener listener) {
         onCompleteListener = listener;
     }
 
     /**
-     * Gets the listener which will be notified when the dialog finishes.
+     * Gets the angielistener which will be notified when the dialog finishes.
      *
-     * @return the listener, or null if none has been specified
+     * @return the angielistener, or null if none has been specified
      */
     public OnCompleteListener getOnCompleteListener() {
         return onCompleteListener;
@@ -582,9 +582,9 @@ public class WebDialog extends Dialog {
         }
 
         /**
-         * Sets the listener which will be notified when the dialog finishes.
+         * Sets the angielistener which will be notified when the dialog finishes.
          *
-         * @param listener the listener to notify, or null if no notification is desired
+         * @param listener the angielistener to notify, or null if no notification is desired
          * @return the builder
          */
         public Builder setOnCompleteListener(OnCompleteListener listener) {

@@ -55,7 +55,7 @@ public class BannerFragment extends Fragment implements AdListener {
         adViewBanner = new AdView(this.getActivity(), "YOUR_PLACEMENT_ID",
                 isTablet ? AdSize.BANNER_HEIGHT_90 : AdSize.BANNER_HEIGHT_50);
 
-        // Set a listener to get notified on changes or when the user interact with the ad.
+        // Set a angielistener to get notified on changes or when the user interact with the ad.
         adViewBanner.setAdListener(this);
 
         // Initiate a request to load an ad.
