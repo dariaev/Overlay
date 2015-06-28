@@ -10,6 +10,9 @@ import static com.parse.Parse.*;
  * Created by sunangel on 6/27/15.
  */
 public class OverlayApp extends Application {
+    public double lastLong=-1;
+    public double lastLat=-1;
+
     @Override public void onCreate() {
         super.onCreate();
 
