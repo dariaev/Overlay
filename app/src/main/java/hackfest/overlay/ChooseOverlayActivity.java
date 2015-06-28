@@ -378,6 +378,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Bitmap overlayedBitmap = getOverlayedBitmap(mSelectedPhoto, mOverlayPng);
+                if (overlayedBitmap == null) return;
 
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), overlayedBitmap, "title", null);
                 Uri screenshotUri = Uri.parse(path);
@@ -456,20 +457,24 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     private Bitmap getOverlayedBitmap(ImageView selectedPhoto, ImageView overlay) {
         Bitmap selectedPhotoBitmap =((BitmapDrawable)selectedPhoto.getDrawable()).getBitmap();
-        Bitmap overlayBitmap = ((BitmapDrawable)overlay.getDrawable()).getBitmap();
-        float aspectRatio = overlayBitmap.getWidth() / (float) overlayBitmap.getHeight();
-        int newHeight = Math.round(selectedPhoto.getWidth() / aspectRatio);
-        Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
-                newHeight, true);
-
-        Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
-                selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bmOverlay);
-        canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
-        canvas.drawBitmap(scaledOverlay, new Matrix(), null);
-        canvas.save();
-        return bmOverlay;
+        if (overlay.getDrawable() == null) {
+            Toast.makeText(this, "Select an overlay", Toast.LENGTH_LONG).show();
+            return null;
+        } else {
+            Bitmap overlayBitmap = ((BitmapDrawable) overlay.getDrawable()).getBitmap();
+            float aspectRatio = overlayBitmap.getWidth() / (float) overlayBitmap.getHeight();
+            int newHeight = Math.round(selectedPhoto.getWidth() / aspectRatio);
+            Bitmap scaledOverlay = Bitmap.createScaledBitmap(overlayBitmap, selectedPhoto.getWidth(),
+                    newHeight, true);
+            Bitmap bmOverlay = Bitmap.createBitmap(selectedPhotoBitmap.getWidth(),
+                    selectedPhotoBitmap.getHeight(), selectedPhotoBitmap.getConfig());
+            Canvas canvas = new Canvas();
+            canvas.setBitmap(bmOverlay);
+            canvas.drawBitmap(selectedPhotoBitmap, new Matrix(), null);
+            canvas.drawBitmap(scaledOverlay, new Matrix(), null);
+            canvas.save();
+            return bmOverlay;
+        }
     }
 
     private Bitmap imageViewToBitmap(ImageView imageView) {
