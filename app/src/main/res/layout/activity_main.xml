@@ -40,22 +40,24 @@ android:layout_height="match_parent">
 
                 <ImageView
                     android:layout_width="100dp"
-                    android:layout_height="200dp"
+                    android:layout_height="100dp"
                     android:src="@drawable/captureicon"
-                    android:background="@color/accent_material_dark"
-                    android:layout_centerInParent="true"
                     android:gravity="bottom|center_horizontal"
                     android:id="@+id/captureButton"
-                    android:onClick="captureImage"/>
+                    android:onClick="captureImage"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp" />
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="70dp"
-                    android:src="@drawable/captureicon"
-                    android:layout_below="@id/captureButton"
-                    android:background="@color/accent_material_light"
-                    android:layout_centerInParent="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_file_upload_black_24dp"
                     android:gravity="bottom|center_horizontal"
-                    android:onClick="UploadImage"/>
+                    android:onClick="UploadImage"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="5dp" />
             </RelativeLayout>
         </LinearLayout>
         </FrameLayout>
