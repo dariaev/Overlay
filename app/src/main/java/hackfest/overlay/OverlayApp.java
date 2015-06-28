@@ -20,6 +20,8 @@ public class OverlayApp extends Application {
     }
 
     private byte[] image;
+    public double lastLong=-1;
+    public double lastLat=-1;
 
     @Override public void onCreate() {
         super.onCreate();

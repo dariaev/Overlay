@@ -53,8 +53,6 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     private LocationListener locationListener;
-    static public double lastLong=-1;
-    static public double lastLat=-1;
     public static String photoExtra = "PHOTO_EXTRA";
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -136,8 +134,8 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 
         @Override
         public void onLocationChanged(Location location) {
-            lastLong = location.getLongitude();
-            lastLat = location.getLatitude();
+            ((OverlayApp)getApplication()).lastLong = location.getLongitude();
+            ((OverlayApp)getApplication()).lastLat = location.getLatitude();
         };
     }
     public void openDrawer(View view) {

@@ -17,33 +17,39 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight=".08"
-                android:layout_gravity="center_horizontal">
+                android:layout_weight=".04"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="8dp">
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/ic_search_black_24dp"
                     android:id="@+id/imgButtonLeft"
+                    android:onClick="topNavClicked"
                     android:gravity="center_horizontal"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center_vertical" />
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="4"
                     android:layout_height="wrap_content"
                     android:text="Location"
                     android:id="@+id/textButtonMiddle"
                     android:gravity="center"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:textIsSelectable="false"
+                    android:textSize="20dp"
+                    android:textColor="@color/primary_material_dark" />
                 <ImageView
                     android:src="@drawable/ic_trending_up_black_24dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:id="@+id/imgButtonRight"
+                    android:onClick="topNavClicked"
                     android:gravity="center"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center_vertical" />
             </LinearLayout>
 
             <FrameLayout

@@ -27,8 +27,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View.OnClickListener;
 
@@ -60,7 +63,13 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
     @InjectView(R.id.overlay) ImageView mOverlayPng;
     @InjectView(R.id.selected_photo) ImageView mSelectedPhoto;
+    @InjectView(R.id.imgButtonLeft) ImageView imgButtonLeft;
+    @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
+    @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
+    @InjectView(R.id.horizontalScrollView) HorizontalScrollView scrollView;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
+    final ArrayList<Overlay> topNlocation = new ArrayList<Overlay>();
+    final ArrayList<Overlay> trending = new ArrayList<Overlay>();
     private SlidingUpPanelLayout SlidePanel = null;
     private GestureDetectorCompat mDetector;
     private boolean lastWasPrev;
@@ -69,6 +78,10 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     ListIterator<Overlay> itr;
     LinearLayout imageGallery;
     private static final int SELECT_PICTURE_ACTIVITY_RESULT_CODE = 0;
+    private String left;
+    private String mid;
+    private String right;
+    private int scrollIdx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,17 +103,57 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         mSelectedPhoto.setImageBitmap(rotatedBitmap);
         getAllOverlays();
         lastWasPrev = false;
+        getTopNByLocation(10,((OverlayApp)getApplication()).lastLong,((OverlayApp)getApplication()).lastLat);
         previouslySelected = null;
         getSupportActionBar().hide();
-        getTopNTrending(20);
+        left = "Search";
+        mid = "Location";
+        right = "Trending";
+    }
+
+    public void topNavClicked(View v) {
+        if (v.equals(imgButtonLeft)){
+            textButtonMiddle.setText(left);
+            if (mid.equals("Location")) {
+                imgButtonLeft.setImageResource(R.drawable.ic_location_on_black_24dp);
+                mid = left;
+                left = "Location";
+            } else if (mid.equals("Search")) {
+                imgButtonLeft.setImageResource(R.drawable.ic_search_black_24dp);
+                mid = left;
+                left = "Search";
+            } else {
+                imgButtonLeft.setImageResource(R.drawable.ic_trending_up_black_24dp);
+                mid = left;
+                left = "Trending";
+            }
+        } else if (v.equals(imgButtonRight)) {
+            textButtonMiddle.setText(right);
+            if (mid.equals("Location")) {
+                imgButtonRight.setImageResource(R.drawable.ic_location_on_black_24dp);
+                mid = right;
+                right = "Location";
+            } else if (mid.equals("Search")) {
+                imgButtonRight.setImageResource(R.drawable.ic_search_black_24dp);
+                mid = right;
+                right = "Search";
+            } else {
+                imgButtonRight.setImageResource(R.drawable.ic_trending_up_black_24dp);
+                mid = right;
+                right = "Trending";
+            }
+        }
+        if(mid.equals("Trending")) {
+            getTopNTrending(10);
+        } else if (mid.equals("Location")){
+            getTopNByLocation(10,((OverlayApp)getApplication()).lastLong,((OverlayApp)getApplication()).lastLat);
+        }
     }
 
     public void PullUpSharedScreen(View view) {
         SlidePanel.setVisibility(View.VISIBLE);
         SlidePanel.setPanelHeight(600);
-        imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
-        lastWasPrev = false;
-    }
+}
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
@@ -114,32 +167,41 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         @Override
         public boolean onFling(MotionEvent event1, MotionEvent event2,
                                float velocityX, float velocityY) {
+            int scrollIdx = -1;
             Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
             if(velocityX > 0) {
                 Overlay img;
                 if (!itr.hasNext()) {
-                    itr = allOverlays.listIterator();
+                    if(mid.equals("Location")) {
+                        itr = topNlocation.listIterator();
+                    } else if (mid.equals("Trending")) {
+                        itr = trending.listIterator();
+                    }
                 }
                 if (lastWasPrev) {
+                    scrollIdx = itr.nextIndex();
                     img = itr.next();
                 }
                 Log.d("BLAH","BLAH");
+                scrollIdx = itr.nextIndex();
                 img = itr.next();
                 Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
                 Drawable d = new BitmapDrawable(getResources(), bmp);
                 mOverlayPng.setImageDrawable(d);
                 lastWasPrev = false;
-                return true;
             } else {
                 Overlay img = null;
                 if (!itr.hasPrevious()){
                     while(itr.hasNext()){
+                        scrollIdx = itr.nextIndex();
                         img = itr.next();
                     }
                 } else {
+                    scrollIdx = itr.previousIndex();
                     img = itr.previous();
                 }
                 if (!lastWasPrev) {
+                    scrollIdx = itr.previousIndex();
                     img = itr.previous();
                 }
                 Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
@@ -147,8 +209,9 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                 mOverlayPng.setImageDrawable(d);
                 Log.d("HERE","HERE");
                 lastWasPrev = true;
-                return true;
             }
+            if(scrollIdx != -1) scrollView.smoothScrollTo(scrollIdx*200+(scrollIdx-1)*50,0);
+            return true;
         }
     }
 
@@ -337,7 +400,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     //possible that this will return an empty list
     // Noah
     public ArrayList<Overlay> getTopNTrending(final int n) {
-        final ArrayList<Overlay> trending = new ArrayList<Overlay>();
         ParseQuery query = new ParseQuery("Overlay");
 
         // by location temporarily looks for the top most popular iwthin a "30 mile radius"
@@ -358,12 +420,39 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
             @Override
             public void done(Object o, Throwable throwable) {
-                List<ParseObject> list = (List<ParseObject>) o;
-                for (int i = 0; i < n && i < list.size(); i++) {
-                    ParseObject object = (ParseObject) list.get(i);
-                    Overlay overlay = new Overlay(object);
-                    trending.add(overlay);
+                if (trending == null || trending.size() == 0) {
+                    List<ParseObject> list = (List<ParseObject>) o;
+                    for (int i = 0; i < n && i < list.size(); i++) {
+                        ParseObject object = (ParseObject) list.get(i);
+                        Overlay overlay = new Overlay(object);
+                        trending.add(overlay);
+                    }
                 }
+                imageGallery.removeAllViews();
+                int idx = 0;
+                for (Overlay img : trending) {
+                    final int scrollIdx = idx;
+                    Log.d("Noah","img read");
+                    idx++;
+                    ImageView iv = new ImageView(getApplicationContext());
+                    Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                    final Drawable d = new BitmapDrawable(getResources(), bmp);
+                    iv.setImageDrawable(d);
+                    iv.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            ImageView i = (ImageView) v;
+                            mOverlayPng.setImageDrawable(d);
+                            scrollView.smoothScrollTo(scrollIdx*200+(scrollIdx-1)*50,0);
+                        }
+                    });
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
+                    lp.setMargins(0, 0, 50, 0);
+                    iv.setLayoutParams(lp);
+                    imageGallery.addView(iv);
+                }
+                lastWasPrev = false;
+                itr = trending.listIterator();
+
 
             }
         });
@@ -373,9 +462,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     //possible that this will return an empty list
     // Noah
     public ArrayList<Overlay> getTopNByLocation(final int n, double longitude, double latitude) {
-        final ArrayList<Overlay> topN = new ArrayList<Overlay>();
         ParseQuery query = new ParseQuery("Overlay");
-
         // by location temporarily looks for the top most popular iwthin a "30 mile radius"
         ParseGeoPoint searchQueryPoint = new ParseGeoPoint(latitude, longitude);
         query.whereWithinMiles("CurrentGeoPoint", searchQueryPoint,50);
@@ -395,16 +482,44 @@ public class ChooseOverlayActivity extends ActionBarActivity {
 
             @Override
             public void done(Object o, Throwable throwable) {
-                List<ParseObject> list = (List<ParseObject>) o;
-                for (int i = 0; i < n && i < list.size(); i++) {
-                    ParseObject object = (ParseObject) list.get(i);
-                    Overlay overlay = new Overlay(object);
-                    topN.add(overlay);
+                if (trending == null || trending.size() == 0) {
+                    List<ParseObject> list = (List<ParseObject>) o;
+                    for (int i = 0; i < n && i < list.size(); i++) {
+                        ParseObject object = (ParseObject) list.get(i);
+                        Overlay overlay = new Overlay(object);
+                        topNlocation.add(overlay);
+                    }
                 }
+                imageGallery.removeAllViews();
+                for (Overlay img : topNlocation) {
+                    Log.d("Noah","img read");
+                    ImageView iv = new ImageView(getApplicationContext());
+                    Bitmap bmp = BitmapFactory.decodeByteArray(img.imageArray, 0, img.imageArray.length);
+                    final Drawable d = new BitmapDrawable(getResources(), bmp);
+                    iv.setImageDrawable(d);
+                    iv.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+                            if(previouslySelected != null){
+                                previouslySelected.setBackgroundResource(Color.TRANSPARENT);
+                                previouslySelected = (ImageView) v;
+                            }
+                            ImageView i = (ImageView) v;
+                            previouslySelected = i;
+                            v.setBackgroundResource(R.color.background_material_dark);
+                            mOverlayPng.setImageDrawable(d);
+                        }
+                    });
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
+                    lp.setMargins(0, 0, 50, 0);
+                    iv.setLayoutParams(lp);
+                    imageGallery.addView(iv);
+                }
+                lastWasPrev = false;
+                itr = topNlocation.listIterator();
 
             }
         });
-        return topN;
+        return topNlocation;
 
     }
 
@@ -460,6 +575,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     iv.setLayoutParams(lp);
                     imageGallery.addView(iv);
                 }
+                lastWasPrev = false;
                 itr = allOverlays.listIterator();
             }
         });
