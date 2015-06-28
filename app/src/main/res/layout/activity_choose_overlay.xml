@@ -53,7 +53,7 @@
             android:padding="5dp"
             android:adjustViewBounds="true"
             android:layout_gravity="center"
-            tools:src="@drawable/greylock_sample"/>
+            android:src="@drawable/greylock_sample"/>
 
         <ImageView
             android:id="@+id/overlay"
