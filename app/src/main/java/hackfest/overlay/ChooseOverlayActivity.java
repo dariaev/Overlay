@@ -85,7 +85,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @InjectView(R.id.imgButtonRight) ImageView imgButtonRight;
     @InjectView(R.id.textButtonMiddle) TextView textButtonMiddle;
     @InjectView(R.id.horizontalScrollView) HorizontalScrollView scrollView;
-    @InjectView(R.id.upload) ImageView uploadView;
     private final String TAG = ChooseOverlayActivity.class.getSimpleName();
     private Bitmap overlayBitmap;
     final ArrayList<Overlay> topNlocation = new ArrayList<Overlay>();
@@ -114,7 +113,7 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        thisAct=this;
+        thisAct = this;
         setContentView(R.layout.activity_choose_overlay);
         ButterKnife.inject(this);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
@@ -139,7 +138,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         mid = "Location";
         right = "Trending";
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-
     }
 
 
@@ -158,11 +156,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         if (((TextView) v).getText().equals("Search")){
             ShowSearchSlider(null);
         }
-    }
-
-    public void moveOverlay(View v) {
-        // follow the cursor
-        mDetector.setIsLongpressEnabled(true);
     }
 
     public void topNavClicked(View v) {
@@ -283,7 +276,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
     protected Integer doInBackground(String... queryString) {
         URL url = null;
         URLConnection connection=null;
-        String tempQueryString="barack%20obama";
         Log.v("Angie", "query string is " + mQuery);
         try {
             url = new URL("https://ajax.googleapis.com/ajax/services/search/images?" +
@@ -323,9 +315,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         }
         return 3;
     }
-
-    protected void onPostExecute(Integer integer) {
-    }
 }
 
     public static class DownloadImageTask extends AsyncTask<String, Void, Drawable> {
@@ -346,9 +335,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
             Drawable d = new BitmapDrawable(thisAct.getResources(), mIcon11);
 
             return d;
-        }
-
-        protected void onPostExecute(Bitmap result) {
         }
     }
 
@@ -594,8 +580,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
                     }
                 }
 
-
-
                 removeMessages(0);
                 //message.
             }
@@ -724,15 +708,6 @@ public class ChooseOverlayActivity extends ActionBarActivity {
         imageView.buildDrawingCache();
         Bitmap bitmap = imageView.getDrawingCache();
         return bitmap;
-    }
-
-    private View getImageView(Integer image) {
-        ImageView imageView = new ImageView(getApplicationContext());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200,200);
-        lp.setMargins(0, 0, 50, 0);
-        imageView.setLayoutParams(lp);
-        imageView.setImageResource(image);
-        return imageView;
     }
 
     //possible that this will return an empty list
