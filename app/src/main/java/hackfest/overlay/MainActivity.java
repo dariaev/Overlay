@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,7 +40,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Set;
+
+public class MainActivity extends ActionBarActivity implements SurfaceHolder.Callback {
 
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
@@ -48,6 +68,15 @@ public class MainActivity extends ActionBarActivity {
     private LocationListener locationListener;
     private double lastLong=-1;
     private double lastLat=-1;
+
+    Camera camera;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+
+    Camera.PictureCallback rawCallback;
+    Camera.ShutterCallback shutterCallback;
+    Camera.PictureCallback jpegCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +102,40 @@ public class MainActivity extends ActionBarActivity {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         //ParseUploadOverlay();
+
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        surfaceHolder = surfaceView.getHolder();
+
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        jpegCallback = new PictureCallback() {
+
+            @Override
+            public void onPictureTaken(byte[] data, Camera camera) {
+                FileOutputStream outStream = null;
+                try {
+                    outStream = new FileOutputStream(String.format("/sdcard/%d.jpg", System.currentTimeMillis()));
+
+                    outStream.write(data);
+                    outStream.close();
+                }
+
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                finally {
+                }
+
+                Toast.makeText(getApplicationContext(), "Picture Saved", Toast.LENGTH_LONG).show();
+                refreshCamera();
+            }
+        };
     }
     private class MyLocLis implements LocationListener {
 
@@ -251,5 +314,89 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void captureImage(View v) throws IOException {
+        camera.takePicture(null, null, jpegCallback);
+    }
+
+    public void refreshCamera() {
+        if (surfaceHolder.getSurface() == null) {
+            return;
+        }
+
+        try {
+            camera.stopPreview();
+        }
+
+        catch (Exception e) {
+        }
+
+        try {
+            camera.setPreviewDisplay(surfaceHolder);
+            camera.startPreview();
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        try {
+            camera = Camera.open();
+        }
+
+        catch (RuntimeException e) {
+            System.err.println(e);
+            return;
+        }
+
+        Camera.Parameters param;
+        param = camera.getParameters();
+        param.setPreviewSize(352, 288);
+        camera.setParameters(param);
+
+        try {
+            camera.setPreviewDisplay(surfaceHolder);
+            camera.startPreview();
+        }
+
+        catch (Exception e) {
+            System.err.println(e);
+            return;
+        }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        refreshCamera();
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        camera.stopPreview();
+        camera.release();
+        camera = null;
     }
 }
